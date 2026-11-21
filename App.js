@@ -367,24 +367,42 @@ function ResultScreen({ navigation, route }) {
         <Text style={[type.sub, { marginTop: space(2), marginBottom: space(4) }]}>
           {result.parts.length ? 'We know this cartridge. Add the appliance it belongs to.' : 'No match on that number yet.'}
         </Text>
-        {result.parts.map((p) => (
-          <Card key={p.partId} style={{ marginBottom: space(3) }}>
-            <View style={styles.rowBetween}>
-              <Text style={styles.cardTitle}>{p.partNo}</Text>
-              <Badge tone="confirmed">Known part</Badge>
-            </View>
-            <Text style={[type.sub, { marginTop: 2 }]}>{p.brand} · {withoutBrand(p.title, p.brand)}</Text>
-            <Text style={[type.sub, { marginTop: space(2) }]}>{p.spec}</Text>
-            <Text style={[type.mono, { marginTop: space(2), color: colors.sub }]}>
-              Replace every {p.intervalMonths} months
-            </Text>
-            <View style={{ height: space(3) }} />
-            <PrimaryButton
-              label="Add this appliance"
-              onPress={() => navigation.navigate('AddAppliance', { partId: p.partId, partNo: p.partNo, category: p.category, brand: p.brand })}
-            />
-          </Card>
-        ))}
+        {result.parts.map((p) => {
+          const fits = adapters(p.partId);
+          return (
+            <Card key={p.partId} style={{ marginBottom: space(3) }}>
+              <View style={styles.rowBetween}>
+                <Text style={styles.cardTitle}>{p.partNo}</Text>
+                <Badge tone="confirmed">Known part</Badge>
+              </View>
+              <Text style={[type.sub, { marginTop: 2 }]}>{p.brand} · {withoutBrand(p.title, p.brand)}</Text>
+              <Text style={[type.sub, { marginTop: space(2) }]}>{p.spec}</Text>
+              <Text style={[type.mono, { marginTop: space(2), color: colors.sub }]}>
+                Replace every {p.intervalMonths} months
+              </Text>
+
+              {fits.length > 0 && (
+                <View style={{ marginTop: space(3) }}>
+                  <Text style={type.body}>Fits {fits.length} appliance model{fits.length > 1 ? 's' : ''} we verified</Text>
+                  {fits.slice(0, 6).map((f, i) => (
+                    <Text key={i} style={[type.mono, { marginTop: 2, color: colors.sub }]}>
+                      {f.model} · {f.grade === 'explicit' ? 'listed by maker' : 'series rule'}
+                    </Text>
+                  ))}
+                  {fits.length > 6 ? (
+                    <Text style={[type.sub, { marginTop: 2 }]}>+{fits.length - 6} more in the source list</Text>
+                  ) : null}
+                </View>
+              )}
+
+              <View style={{ height: space(3) }} />
+              <PrimaryButton
+                label="Add this appliance"
+                onPress={() => navigation.navigate('AddAppliance', { partId: p.partId, partNo: p.partNo, category: p.category, brand: p.brand })}
+              />
+            </Card>
+          );
+        })}
         {!result.parts.length && (
           <Card>
             <Text style={type.body}>Try the number exactly as printed, or scan the cartridge label.</Text>
@@ -832,7 +850,7 @@ function SourcesScreen() {
 
       {Object.entries(gradeCopy).slice(0, 3).map(([k, v]) => (
         <Card key={k} style={{ marginBottom: space(2) }}>
-          <Text style={styles.cardTitle}>{k}</Text>
+          <Text style={styles.cardTitle}>{gradeLabel(k)}</Text>
           <Text style={[type.sub, { marginTop: 2 }]}>{v}</Text>
         </Card>
       ))}
@@ -867,6 +885,10 @@ function SourcesScreen() {
 }
 
 /** One line per known conflict, phrased for the store listing's promise: we never merge. */
+function gradeLabel(k) {
+  return { explicit: "Model list", rule: "Series rule", part_only: "Part facts", third_party: "Third-party chart" }[k] || k;
+}
+
 function conflictNote() {
   return 'When two manufacturer pages disagree, both are shown with the page each came from and never merged into one claim.';
 }
@@ -974,6 +996,7 @@ const styles = StyleSheet.create({
   chipText: { fontSize: 13, fontWeight: '600', color: colors.ink },
   footerLinks: { marginTop: space(6), alignItems: 'center' },
 });
+
 
 
 
