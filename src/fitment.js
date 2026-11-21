@@ -6,6 +6,7 @@ import {
   families,
   partById,
   evidenceFor,
+  adaptersFor,
   normalize,
   normalizeBase,
   CONFIDENCE,
@@ -27,6 +28,9 @@ export function getPart(id) {
 }
 export function getEvidence(id) {
   return evidenceFor(DATASET, id);
+}
+export function adapters(id) {
+  return adaptersFor(DATASET, id);
 }
 export function conflictFor(partId) {
   return (DATASET.conflicts || []).find((c) => c.part_id === partId) || null;

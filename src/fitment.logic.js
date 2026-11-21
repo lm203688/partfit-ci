@@ -211,6 +211,24 @@ export function families(dataset, brand) {
     .sort((a, b) => b.examples.length - a.examples.length);
 }
 
+/** 反查的下一步：这个部件装在哪些机型上（L1 杠杆），按证据等级排序 */
+export function adaptersFor(dataset, partId) {
+  const rows = flatten(dataset)
+    .filter((r) => r.part_id === partId)
+    .map((r) => ({ model: r.value_raw, grade: r.fit_grade, sourceUrl: r.source_url, note: r.note }));
+  const seen = new Set();
+  const uniq = [];
+  for (const r of rows) {
+    const key = normalize(r.model);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    uniq.push(r);
+  }
+  const rank = { explicit: 0, rule: 1, part_only: 2 };
+  uniq.sort((a, b) => (rank[a.grade] ?? 3) - (rank[b.grade] ?? 3));
+  return uniq;
+}
+
 export function partById(dataset, id) {
   return dataset.parts.find((p) => p.id === id) || null;
 }

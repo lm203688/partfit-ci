@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   Linking,
+  LogBox,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -17,7 +18,7 @@ import { StatusBar } from 'expo-status-bar';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
 import { colors, type, space } from './src/theme';
-import { match, lookup, brandFamilies, getPart, getEvidence, conflictFor, categories } from './src/fitment';
+import { match, lookup, brandFamilies, getPart, getEvidence, conflictFor, categories, adapters } from './src/fitment';
 import { computeDue, formatRemaining, statusLabel, todayStr } from './src/due';
 import * as db from './src/db';
 import * as notify from './src/notify';
@@ -29,6 +30,8 @@ const DEMO = process.env.EXPO_PUBLIC_DEMO === '1';
 // Screenshot tour: only when a build explicitly sets EXPO_PUBLIC_SHOTS=1 (CI screenshot job).
 const SHOTS = process.env.EXPO_PUBLIC_SHOTS === '1';
 const navRef = createNavigationContainerRef();
+// Screenshot builds hide the dev-only log overlay so the captured frames are clean.
+if (SHOTS) LogBox.ignoreAllLogs(true);
 
 // Deep links: partfit://result/<query>, partfit://detail/<id>, partfit://lookup, ...
 const linking = {
@@ -378,6 +381,9 @@ function ResultScreen({ navigation, route }) {
 
   const hits = result.hits || [];
   const top = hits[0];
+  // If the typed value is actually a cartridge number (the old filter in hand), reverse it:
+  // that is the highest-leverage lookup in this dataset (few part numbers, many appliance models).
+  const cartridge = hits.length ? [] : lookup(query);
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={{ padding: space(5) }}>
@@ -444,6 +450,49 @@ function ResultScreen({ navigation, route }) {
           />
         </Card>
       ))}
+
+      {cartridge.map((p) => {
+        const fits = adapters(p.partId);
+        return (
+          <Card key={p.partId} style={{ marginTop: space(4), borderColor: colors.accent }}>
+            <View style={styles.rowBetween}>
+              <Text style={styles.cardTitle}>{p.partNo}</Text>
+              <Badge tone="confirmed">Cartridge number</Badge>
+            </View>
+            <Text style={[type.sub, { marginTop: 2 }]}>{p.brand} · {p.title}</Text>
+            <Text style={[type.sub, { marginTop: space(2) }]}>{p.spec}</Text>
+            <Text style={[type.mono, { marginTop: space(2), color: colors.sub }]}>
+              Replace every {p.intervalMonths} months
+            </Text>
+
+            {fits.length > 0 && (
+              <View style={{ marginTop: space(3) }}>
+                <Text style={type.body}>Fits {fits.length} appliance model{fits.length > 1 ? 's' : ''} we verified</Text>
+                {fits.slice(0, 6).map((f, i) => (
+                  <Text key={i} style={[type.mono, { marginTop: 2, color: colors.sub }]}>
+                    {f.model} · {f.grade === 'explicit' ? 'listed by maker' : 'series rule'}
+                  </Text>
+                ))}
+                {fits.length > 6 ? (
+                  <Text style={[type.sub, { marginTop: 2 }]}>+{fits.length - 6} more in the source list</Text>
+                ) : null}
+              </View>
+            )}
+
+            <View style={{ height: space(3) }} />
+            <PrimaryButton
+              label="Add the appliance this fits"
+              onPress={() => navigation.navigate('AddAppliance', { partId: p.partId, partNo: p.partNo, category: p.category, brand: p.brand })}
+            />
+          </Card>
+        );
+      })}
+
+      {cartridge.length ? (
+        <Text style={[type.sub, { marginTop: space(4) }]}>
+          This number is the cartridge itself, so we reversed it instead of guessing an appliance.
+        </Text>
+      ) : null}
 
       {!hits.length && (
         <Card style={{ marginTop: space(4) }}>
@@ -800,10 +849,10 @@ export default function App() {
   useEffect(() => {
     if (!SHOTS) return undefined;
     const tour = [
-      { at: 4000, run: () => navRef.navigate('Result', { query: 'XWFE', mode: 'model' }) },
-      { at: 9000, run: () => navRef.navigate('Detail', { id: 1 }) },
-      { at: 14000, run: () => navRef.navigate('Lookup') },
-      { at: 19000, run: () => navRef.navigate('Sources') },
+      { at: 7000, run: () => navRef.navigate('Result', { query: 'RF28K9070SR/AA', mode: 'model' }) },
+      { at: 14000, run: () => navRef.navigate('Result', { query: 'XWFE', mode: 'part' }) },
+      { at: 21000, run: () => navRef.navigate('Detail', { id: 1 }) },
+      { at: 28000, run: () => navRef.navigate('Sources') },
     ];
     const timers = tour.map((s) => setTimeout(() => { if (navRef.isReady()) s.run(); }, s.at));
     return () => timers.forEach(clearTimeout);

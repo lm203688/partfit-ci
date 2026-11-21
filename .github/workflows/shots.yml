@@ -35,32 +35,19 @@ jobs:
           echo "name=$NAME" >> "$GITHUB_OUTPUT"
           echo "using: $NAME"
 
-      - name: Start Metro
-        run: |
-          set -x
-          EXPO_PUBLIC_DEMO=1 EXPO_PUBLIC_SHOTS=1 npx expo start --port 8081 > "$RUNNER_TEMP/metro.log" 2>&1 &
-          for i in $(seq 1 45); do
-            if curl -sf http://localhost:8081/status | grep -q running; then echo "metro up after $((i*2))s"; break; fi
-            sleep 2
-          done
-          if ! curl -sf http://localhost:8081/status | grep -q running; then
-            echo "METRO FAILED TO START"; tail -30 "$RUNNER_TEMP/metro.log"; exit 1
-          fi
-          # warm the bundle so the first app request is fast
-          curl -s -o /dev/null -w "bundle_http=%{http_code}\n" \
-            "http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false" || true
-
-      - name: Build debug app for simulator
+      - name: Build release app for simulator
         run: |
           set -o pipefail
           cd ios
           WORKSPACE=$(ls -d *.xcworkspace | head -1)
           SCHEME="${WORKSPACE%.xcworkspace}"
           xcodebuild build \
-            -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Debug \
+            -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath "$RUNNER_TEMP/dd" \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tail -20
+          APP=$(find "$RUNNER_TEMP/dd/Build/Products/Release-iphonesimulator" -maxdepth 1 -name "*.app")
+          ls -l "$APP/main.jsbundle" || echo "NO EMBEDDED BUNDLE"
 
       - name: Boot simulator
         run: |
@@ -68,54 +55,33 @@ jobs:
           xcrun simctl bootstatus "${{ steps.sim.outputs.name }}" -b || true
           xcrun simctl status_bar "${{ steps.sim.outputs.name }}" override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
 
-      - name: Install and launch
+      - name: Install, launch, burst capture
         run: |
           set -x
           DEV="${{ steps.sim.outputs.name }}"
-          APP=$(find "$RUNNER_TEMP/dd/Build/Products" -maxdepth 2 -name "*.app" | head -1)
+          APP=$(find "$RUNNER_TEMP/dd/Build/Products/Release-iphonesimulator" -maxdepth 1 -name "*.app")
           xcrun simctl install "$DEV" "$APP"
           xcrun simctl launch --terminate-running-process "$DEV" "$BUNDLE_ID"
-          sleep 1
-          xcrun simctl io "$DEV" screenshot "$RUNNER_TEMP/s0.png"
-          sleep 1
-          xcrun simctl spawn "$DEV" launchctl list | grep -i partfit || echo "not running"
-          xcrun simctl io "$DEV" screenshot "$RUNNER_TEMP/s1.png"
-          sleep 2
-          xcrun simctl io "$DEV" screenshot "$RUNNER_TEMP/s2.png"
-
-      - name: Capture screens
-        run: |
-          set -x
-          DEV="${{ steps.sim.outputs.name }}"
           OUT="$RUNNER_TEMP/shots"
           mkdir -p "$OUT"
-          cp "$RUNNER_TEMP"/s*.png "$OUT"/ 2>/dev/null || true
-          # tour timing: Home 0-4s, Result 4-9s, Detail 9-14s, Lookup 14-19s, Sources 19s+
-          xcrun simctl launch --terminate-running-process "$DEV" "$BUNDLE_ID" || true
-          sleep 2
-          xcrun simctl io "$DEV" screenshot "$OUT/01-home.png"
-          sleep 3
-          xcrun simctl io "$DEV" screenshot "$OUT/02-result-xwfe.png"
-          sleep 5
-          xcrun simctl io "$DEV" screenshot "$OUT/03-detail.png"
-          sleep 5
-          xcrun simctl io "$DEV" screenshot "$OUT/04-lookup.png"
-          sleep 5
-          xcrun simctl io "$DEV" screenshot "$OUT/05-sources.png"
-          ls -l "$OUT"
-          md5 "$OUT"/*.png || true
-
-      - name: Metro log tail
-        if: always()
-        run: tail -80 "$RUNNER_TEMP/metro.log" || true
+          # tour: Home 0s, Result(Samsung) 7s, Result(XWFE cartridge) 14s, Detail 21s, Sources 28s
+          for t in $(seq 1 36); do
+            xcrun simctl io "$DEV" screenshot "$OUT/f$(printf '%02d' $t).png" >/dev/null 2>&1
+            sleep 1
+          done
+          ls -1 "$OUT" | wc -l
 
       - name: Crash reports
         if: always()
+        continue-on-error: true
         run: |
           mkdir -p "$RUNNER_TEMP/crash"
           find ~/Library/Logs/DiagnosticReports -type f -name 'PartFit*.ips' -mmin -20 -exec cp {} "$RUNNER_TEMP/crash/" \; 2>/dev/null || true
-          ls -l "$RUNNER_TEMP/crash" || true
-          for f in "$RUNNER_TEMP"/crash/*.ips; do echo "=== $f"; head -c 2500 "$f"; echo; done
+          ls -l "$RUNNER_TEMP/crash" 2>/dev/null || true
+          for f in "$RUNNER_TEMP"/crash/*.ips; do
+            [ -f "$f" ] && { echo "=== $f"; head -c 2000 "$f"; echo; }
+          done
+          true
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -124,6 +90,5 @@ jobs:
           path: |
             ${{ runner.temp }}/shots/*.png
             ${{ runner.temp }}/crash/*.ips
-            ${{ runner.temp }}/metro.log
           if-no-files-found: warn
           retention-days: 7
