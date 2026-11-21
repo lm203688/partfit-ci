@@ -65,7 +65,7 @@ jobs:
           OUT="$RUNNER_TEMP/shots"
           mkdir -p "$OUT"
           # tour: Home 0s, Result(Samsung) 7s, Result(XWFE cartridge) 14s, Detail 21s, Sources 28s
-          for t in $(seq 1 36); do
+          for t in $(seq 1 40); do
             xcrun simctl io "$DEV" screenshot "$OUT/f$(printf '%02d' $t).png" >/dev/null 2>&1
             sleep 1
           done
@@ -92,3 +92,4 @@ jobs:
             ${{ runner.temp }}/crash/*.ips
           if-no-files-found: warn
           retention-days: 7
+

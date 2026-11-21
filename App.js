@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
@@ -116,6 +116,7 @@ function Row({ label, value }) {
 /* ------------------------------------------------------------------ home */
 
 function HomeScreen({ navigation, refreshKey }) {
+  const insets = useSafeAreaInsets();
   const [items, setItems] = useState([]);
   const [ready, setReady] = useState(false);
   const [counts, setCounts] = useState({ appliances: 0, logs: 0 });
@@ -149,7 +150,7 @@ function HomeScreen({ navigation, refreshKey }) {
   }
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={{ padding: space(5), paddingBottom: space(10) }}>
+    <ScrollView style={styles.screen} contentContainerStyle={{ padding: space(5), paddingTop: insets.top + space(5), paddingBottom: space(10) }}>
       <Text style={styles.eyebrow}>PARTFIT</Text>
       <Text style={type.h1}>Know the exact filter.</Text>
       <Text style={[type.sub, { marginTop: space(2), marginBottom: space(5) }]}>
@@ -846,16 +847,30 @@ const navTheme = {
 };
 
 export default function App() {
+  // Looping screenshot tour: five product screens, 6s each, so a CI capture pass
+  // always lands on every screen no matter how slow the screenshot command is.
   useEffect(() => {
     if (!SHOTS) return undefined;
-    const tour = [
-      { at: 7000, run: () => navRef.navigate('Result', { query: 'RF28K9070SR/AA', mode: 'model' }) },
-      { at: 14000, run: () => navRef.navigate('Result', { query: 'XWFE', mode: 'part' }) },
-      { at: 21000, run: () => navRef.navigate('Detail', { id: 1 }) },
-      { at: 28000, run: () => navRef.navigate('Sources') },
+    const steps = [
+      { screen: 'Home' },
+      { screen: 'Result', params: { query: 'RF28K9070SR/AA', mode: 'model' } },
+      { screen: 'Result', params: { query: 'XWFE', mode: 'part' } },
+      { screen: 'Detail', params: { id: 1 } },
+      { screen: 'Sources' },
     ];
-    const timers = tour.map((s) => setTimeout(() => { if (navRef.isReady()) s.run(); }, s.at));
-    return () => timers.forEach(clearTimeout);
+    let i = 0;
+    let timer;
+    const tick = () => {
+      const s = steps[i % steps.length];
+      i += 1;
+      if (navRef.isReady()) {
+        if (s.screen === 'Home') navRef.navigate('Home');
+        else navRef.navigate(s.screen, s.params);
+      }
+      timer = setTimeout(tick, 6000);
+    };
+    timer = setTimeout(tick, 4000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -919,3 +934,4 @@ const styles = StyleSheet.create({
   chipText: { fontSize: 13, fontWeight: '600', color: colors.ink },
   footerLinks: { marginTop: space(6), alignItems: 'center' },
 });
+
