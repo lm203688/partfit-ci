@@ -1,0 +1,444 @@
+{
+  "schema_version": "0.1",
+  "updated_at": "2026-11-21",
+  "notes": "M0 首批样本。适配事实分三级：explicit(厂商页明示型号清单) / rule(前缀或系列规则) / part_only(仅部件级事实，无型号映射)。每条必须带厂商来源与抓取日期；冲突单独记录。",
+  "evidence_grades": {
+    "explicit": "厂商页面逐个列出可装该部件的整机型号",
+    "rule": "厂商用前缀/系列/兼容器件族表达，需在端上做模式匹配",
+    "part_only": "只证明该部件规格与周期，未证明具体整机适配",
+    "third_party": "非厂商来源（配件商交叉参考表等），不作为发布依据"
+  },
+  "categories": [
+    { "id": "fridge_water", "name": "Refrigerator water filter", "cadence_default_months": 6 },
+    { "id": "humidifier_panel", "name": "Whole-house humidifier water panel", "cadence_default_months": 12 },
+    { "id": "air_purifier", "name": "Air purifier filter", "cadence_default_months": 8 }
+  ],
+  "parts": [
+    {
+      "id": "samsung_haf_cin",
+      "category": "fridge_water",
+      "brand": "Samsung",
+      "part_no": "DA29-00020B",
+      "title": "Samsung HAF-CIN/EXP refrigerator water filter",
+      "spec": "Internal twist-lock; capacity 300 gal / 1200 L; NSF 42 + 53",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "Samsung Canada",
+          "url": "https://www.samsung.com/ca/home-appliance-accessories/refrigerators-filter-haf-cin-haf-cin-exp/",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "标题标注 6 months/1200L，并列出 28 个兼容机型（RF28K9070SR/AA 起）"
+        },
+        {
+          "publisher": "Samsung UK",
+          "url": "https://www.samsung.com/uk/home-appliance-accessories/accessory-filter-haf-cin-haf-cin-exp/",
+          "retrieved_at": "2026-11-21",
+          "grade": "part_only",
+          "quote": "For Use in System Model No. DA97-08006A-B；Replacement Cartridge Code DA29-00020B；Capacity 300 Gallons"
+        }
+      ]
+    },
+    {
+      "id": "samsung_haf_qin",
+      "category": "fridge_water",
+      "brand": "Samsung",
+      "part_no": "DA97-17376B",
+      "title": "Samsung HAF-QIN refrigerator water filter",
+      "spec": "Internal; 2-pack SKU HAF-QIN/2P/EXP",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "Samsung US (builder)",
+          "url": "https://www.samsung.com/us/business/builder/our-appliances/home-appliances-accessories/refrigerators/haf-qin-refrigerator-water-filter-2-pack-haf-qin-2p-exp/",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "列出 BRF365200** / RF23A9071** / RF27CG5400** 等型号通配串"
+        }
+      ]
+    },
+    {
+      "id": "samsung_hafin2",
+      "category": "fridge_water",
+      "brand": "Samsung",
+      "part_no": "DA29-00003G",
+      "title": "Samsung HAFIN2/EXP refrigerator water filter",
+      "spec": "Internal twist-lock; supersedes DA29-00003B",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "Samsung Australia (business)",
+          "url": "https://www.samsung.com/au/business/home-appliance-accessories/hafin2exp-hafin2-exp/",
+          "retrieved_at": "2026-11-21",
+          "grade": "part_only",
+          "quote": "For Use in System Model No. DA97-06317A；Replacement Cartridge Code DA29-00003G (replacing old model DA29-00003B and also compatible)"
+        }
+      ]
+    },
+    {
+      "id": "lg_lt1000p",
+      "category": "fridge_water",
+      "brand": "LG",
+      "part_no": "LT1000P",
+      "title": "LG LT1000P refrigerator water filter",
+      "spec": "6 month / 200 gal; part numbers ADQ74793501, AGF80300704/705, ADQ74793507, AGF80300703",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "LG Canada Support",
+          "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "Model number Table：LFCC23596/LFCS27596/LFD22716ST/LFD22786SD → LT1000P；LFD20786/LFD22786 → LT700P；LFD21860/21870/LFD22860/LFD23860 → LT600P"
+        },
+        {
+          "publisher": "LG Australia",
+          "url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "LT1000P 对应 31 个 GF-/SG- 系型号"
+        },
+        {
+          "publisher": "LG US business spec sheet (LF24Z6530S)",
+          "url": "https://www.lg.com/us/business/download/resources/CT00021979/LF24Z6530S_LG_Pro_Builder_Spec_Sheet[20240821_225459].pdf",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "ACCESSORIES：Replacement Water Filter LT1000P / Fresh Air Filter LT120F"
+        }
+      ]
+    },
+    {
+      "id": "lg_lt700p",
+      "category": "fridge_water",
+      "brand": "LG",
+      "part_no": "LT700P",
+      "title": "LG LT700P refrigerator water filter",
+      "spec": "Twist-on cartridge",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "LG Canada Support",
+          "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "同一张型号表中 LT700P 列：LFD20786、LFD22786 为 ●"
+        }
+      ]
+    },
+    {
+      "id": "lg_lt600p",
+      "category": "fridge_water",
+      "brand": "LG",
+      "part_no": "LT600P",
+      "title": "LG LT600P refrigerator water filter",
+      "spec": "Twist-on cartridge",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "LG Canada Support",
+          "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "同一张型号表中 LT600P 列：LFD21860、LFD21870、LFD22860、LFD23860 为 ●"
+        }
+      ]
+    },
+    {
+      "id": "ge_xwfe",
+      "category": "fridge_water",
+      "brand": "GE Appliances",
+      "part_no": "XWFE",
+      "title": "GE XWFE refrigerator water filter",
+      "spec": "6 in H x 2.25 in W x 2 in D; 170 gal; RFID leak sensing",
+      "interval_months": 6,
+      "supersedes": ["XWF"],
+      "evidence": [
+        {
+          "publisher": "GE Appliances Support",
+          "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
+          "retrieved_at": "2026-11-21",
+          "grade": "rule",
+          "quote": "替换 XWFE 章节注明：适用于以 GBE21, GDE21, GDE25, GFE24, GFE26, GNE21, GNE25, GNE27, GWE19, GYE18, QNE27, GSE25, GSS23, GSS25, GZS22, PSE25, CZS22 开头的型号（共 17 个前缀）"
+        },
+        {
+          "publisher": "GE Appliances Support",
+          "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=000060638",
+          "retrieved_at": "2026-11-21",
+          "grade": "rule",
+          "quote": "XWFE 向后兼容 XWF；XWF 不能向前兼容使用 XWFE 的新机型（XWFE 与面板交互）"
+        }
+      ]
+    },
+    {
+      "id": "ge_gswf",
+      "category": "fridge_water",
+      "brand": "GE Appliances",
+      "part_no": "GSWF",
+      "title": "GE GSWF refrigerator water filter",
+      "spec": "Top-freezer / bottom-freezer cartridge",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "GE Appliances Support",
+          "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
+          "retrieved_at": "2026-11-21",
+          "grade": "part_only",
+          "quote": "该页把 GSWF 指向 Top and Bottom Freezer 更换视频，但未列出具体型号"
+        }
+      ]
+    },
+    {
+      "id": "whirlpool_edr1rxd1",
+      "category": "fridge_water",
+      "brand": "Whirlpool (everydrop)",
+      "part_no": "EDR1RXD1",
+      "title": "everydrop Filter 1 (Purple)",
+      "spec": "Push-in; NSF 42/53/401",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "Whirlpool",
+          "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR1RXD1.html",
+          "retrieved_at": "2026-11-21",
+          "grade": "part_only",
+          "quote": "Fits with brand: Amana, JennAir, Kenmore, KitchenAid, Maytag, Whirlpool（只到品牌与机型类型，无具体型号）"
+        }
+      ]
+    },
+    {
+      "id": "aprilaire_35",
+      "category": "humidifier_panel",
+      "brand": "AprilAire",
+      "part_no": "35",
+      "title": "AprilAire Water Panel 35",
+      "spec": "13 x 10 x 2 in",
+      "interval_months": 12,
+      "evidence": [
+        {
+          "publisher": "AprilAire",
+          "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "Water Panel 35｜Filter Size: 13\" x 10\" x 2\"｜Humidifier Models: 300, 350, 360, 560, 560A, 568, 600, 600A, 600M, 700, 700A, 700M, 760, 760A, 768｜Replace Once Per Heating Season"
+        },
+        {
+          "publisher": "AprilAire Shop",
+          "url": "https://shop.aprilaire.com/products/aprilaire-water-panel-35/1000",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "Compatible Models 另含 600MKZ / 600KZ / 700KZ / 700MKZ（比官网列表多 4 个变体）"
+        }
+      ]
+    },
+    {
+      "id": "aprilaire_45",
+      "category": "humidifier_panel",
+      "brand": "AprilAire",
+      "part_no": "45",
+      "title": "AprilAire Water Panel 45",
+      "spec": "13 x 10 x 2 in",
+      "interval_months": 6,
+      "evidence": [
+        {
+          "publisher": "AprilAire",
+          "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "Water Panel 45｜13\" x 10\" x 2\"｜Models: 400, 400A, 400M｜Replace Twice Per Heating Season"
+        }
+      ]
+    },
+    {
+      "id": "aprilaire_10",
+      "category": "humidifier_panel",
+      "brand": "AprilAire",
+      "part_no": "10",
+      "title": "AprilAire Water Panel 10",
+      "spec": "10 x 10 x 2 in",
+      "interval_months": 12,
+      "evidence": [
+        {
+          "publisher": "AprilAire",
+          "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "Water Panel 10｜10\" x 10\" x 2\"｜Models: 110, 220, 500, 500A, 500M, 550, 550A, 558｜Replace Once Per Heating Season"
+        },
+        {
+          "publisher": "AprilAire owner's manual (PDF, via Home Depot CDN)",
+          "url": "https://images.thdstatic.com/catalog/pdfImages/04/0486fc34-1e73-4bad-8aa0-b3972a4ac52f.pdf",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "手册 Water Panel 表：300→35、400→45、500→10、600→35、700→35"
+        }
+      ]
+    },
+    {
+      "id": "levoit_core300_rf",
+      "category": "air_purifier",
+      "brand": "Levoit",
+      "part_no": "Core 300-P-RF",
+      "title": "Levoit Core 300 series original 3-stage filter",
+      "spec": "3-stage (pre / HEPA / carbon); 6-8 months",
+      "interval_months": 8,
+      "evidence": [
+        {
+          "publisher": "Levoit (product page A)",
+          "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "Compatible with only: Core 300-P, Core P350-P, Core 300-P-RAC"
+        },
+        {
+          "publisher": "Levoit (product page B, Toxin Absorber)",
+          "url": "https://levoit.com/products/core300-air-purifier-replacement-filter-toxin-absorber",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "Compatible with only: Core 300, Core P350, Core 300-RAC（该页在 2026-11-21 复核时返回 404，结论降级为待复核）",
+          "check_status": 404
+        }
+      ]
+    },
+    {
+      "id": "levoit_core300_rf_sr",
+      "category": "air_purifier",
+      "brand": "Levoit",
+      "part_no": "Core 300-RF-SR",
+      "title": "Levoit Core 300 4-stage smoke remover filter",
+      "spec": "4-stage with ARC carbon",
+      "interval_months": 8,
+      "evidence": [
+        {
+          "publisher": "Levoit",
+          "url": "https://levoit.com/products/core-300-4-stage-smoke-remover-replacement-filter",
+          "retrieved_at": "2026-11-21",
+          "grade": "explicit",
+          "quote": "Compatible with only: Core 300, Core 300S, Core P350"
+        }
+      ]
+    }
+  ],
+  "fitments": [
+    {
+      "id": "fit_samsung_haf_cin_models",
+      "category": "fridge_water",
+      "part_id": "samsung_haf_cin",
+      "selector": { "type": "exact", "values": ["RF28K9070SR/AA", "RF23J9011SR/AA", "RF23J9011SG/AA", "RF22M9581SR/AC", "RF22M9581SG/AC", "RF26J7500SR/AA", "RF25HMEDBSR/AA", "RF25HMEDBSG/AA", "RF26HFPNBSR/AA", "RF263BEAESR/AA", "RF263BEAESG/AA", "RF265BEAESR/AC", "RF265BEAESG/AC", "RH22H9010SR/AA", "RF261BEAESR/AA", "RF23HCEDBSR/A", "RF23HCEDBSG/AA", "RF28HFEDBSR/AA", "RF28HFEDBSG/AA", "RF23HTEDBSR/AA", "RF28HDEDBSR/AA", "RF28HMEDBSR/AA", "RF28JBEDBSG/AA", "RF22KREDBSG/AA", "RF24FSEDBSR/AA", "RF28NHEDBSR/AC", "RF28NHEDBSG/AC", "RF28K9580SR/AC"] },
+      "grade": "explicit",
+      "source_url": "https://www.samsung.com/ca/home-appliance-accessories/refrigerators-filter-haf-cin-haf-cin-exp/"
+    },
+    {
+      "id": "fit_samsung_haf_qin_models",
+      "category": "fridge_water",
+      "part_id": "samsung_haf_qin",
+      "selector": { "type": "prefix", "values": ["BRF365200", "BRF425200", "RF18A5101", "RF20A5101", "RF22R7351", "RF22R7551", "RF23A9071", "RF23A9671", "RF23A9675", "RF23A9771", "RF23BB8200", "RF23BB8600", "RF23BB8900", "RF23DB9600", "RF23DB9700", "RF23DB9900", "RF23M8070", "RF23M8090", "RF23M8570", "RF23M8590", "RF23M8960", "RF23R6201", "RF23R6301", "RF24BB6200", "RF24BB6600", "RF24BB6900", "RF24R7201", "RF26CG7400", "RF27CG5010", "RF27CG5100", "RF27CG5400", "RF27CG5900", "RF27T5201", "RF27T5241", "RF27T5501", "RF28R6201", "RF28R6202", "RF28R6221", "RF28R6222", "RF28R6241", "RF28R6301", "RF28R7201", "RF28R7351", "RF28R7551", "RF28T5001", "RF28T5021", "RF28T5101", "RF28T5F01", "RF29A9071", "RF29A9671", "RF29A9675", "RF29A9771", "RF29BB8200", "RF29BB8600", "RF29BB8900", "RF29DB9600", "RF29DB9700", "RF29DB9900", "RF30BB6200", "RF30BB6600", "RF30BB6602", "RF30BB6900", "RF31CG5100", "RF31CG7200", "RF31CG7400", "RF32CG5400", "RF32CG5900", "RS22T5201", "RS22T5561", "RS23A500A", "RS23CB7600", "RS25H5111"] },
+      "grade": "explicit",
+      "source_url": "https://www.samsung.com/us/business/builder/our-appliances/home-appliances-accessories/refrigerators/haf-qin-refrigerator-water-filter-2-pack-haf-qin-2p-exp/",
+      "note": "厂商原文为 'BRF365200**' 形式通配串，此处去掉 ** 保留前缀；列表在页面尾部以 '...' 截断，尚有余项，标记 coverage=partial"
+    },
+    {
+      "id": "fit_lg_lt1000p_models",
+      "category": "fridge_water",
+      "part_id": "lg_lt1000p",
+      "selector": { "type": "exact", "values": ["LFCC23596", "LFCS27596", "LFD22716ST", "LFD22786SD"] },
+      "grade": "explicit",
+      "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
+    },
+    {
+      "id": "fit_lg_lt700p_models",
+      "category": "fridge_water",
+      "part_id": "lg_lt700p",
+      "selector": { "type": "exact", "values": ["LFD20786", "LFD22786"] },
+      "grade": "explicit",
+      "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
+    },
+    {
+      "id": "fit_lg_lt600p_models",
+      "category": "fridge_water",
+      "part_id": "lg_lt600p",
+      "selector": { "type": "exact", "values": ["LFD21860", "LFD21870", "LFD22860", "LFD23860"] },
+      "grade": "explicit",
+      "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
+    },
+    {
+      "id": "fit_lg_lt1000p_au",
+      "category": "fridge_water",
+      "part_id": "lg_lt1000p",
+      "selector": { "type": "prefix", "values": ["GF-V706", "GF-V706B", "GF-V570", "GF-D706", "GF-D708", "GF-L570", "GF-L677", "GF-L706", "GF-L708", "GF-V708", "GF-V910", "SG-5I700"] },
+      "grade": "explicit",
+      "source_url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+      "note": "澳版型号命名与北美不同，单独一条，避免把 GF- 前缀套到北美 RF- 机型上"
+    },
+    {
+      "id": "fit_ge_xwfe_prefix",
+      "category": "fridge_water",
+      "part_id": "ge_xwfe",
+      "selector": { "type": "prefix", "values": ["GBE21", "GDE21", "GDE25", "GFE24", "GFE26", "GNE21", "GNE25", "GNE27", "GWE19", "GYE18", "QNE27", "GSE25", "GSS23", "GSS25", "GZS22", "PSE25", "CZS22"] },
+      "grade": "rule",
+      "source_url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
+      "note": "前缀匹配只能回答「同系列大概率相同」，端上必须提示用户在门内铭牌二次确认"
+    },
+    {
+      "id": "fit_aprilaire_35_models",
+      "category": "humidifier_panel",
+      "part_id": "aprilaire_35",
+      "selector": { "type": "exact", "values": ["300", "350", "360", "560", "560A", "568", "600", "600A", "600M", "600MKZ", "600KZ", "700", "700A", "700M", "700KZ", "700MKZ", "760", "760A", "768"] },
+      "grade": "explicit",
+      "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
+    },
+    {
+      "id": "fit_aprilaire_45_models",
+      "category": "humidifier_panel",
+      "part_id": "aprilaire_45",
+      "selector": { "type": "exact", "values": ["400", "400A", "400M"] },
+      "grade": "explicit",
+      "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
+    },
+    {
+      "id": "fit_aprilaire_10_models",
+      "category": "humidifier_panel",
+      "part_id": "aprilaire_10",
+      "selector": { "type": "exact", "values": ["110", "220", "500", "500A", "500M", "550", "550A", "558"] },
+      "grade": "explicit",
+      "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
+    },
+    {
+      "id": "fit_levoit_core300_rf_models",
+      "category": "air_purifier",
+      "part_id": "levoit_core300_rf",
+      "selector": { "type": "exact", "values": ["Core 300-P", "Core P350-P", "Core 300-P-RAC", "Core 300", "Core 300S", "Core P350", "Core 300-RAC"] },
+      "grade": "explicit",
+      "source_url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter",
+      "conflict": "同一厂商两个页面给出不同型号写法，且 'P' 后缀是否代表包装版本未在该页说明；对外结论必须写「两种写法均被厂商使用」"
+    },
+    {
+      "id": "fit_levoit_core300_sr_models",
+      "category": "air_purifier",
+      "part_id": "levoit_core300_rf_sr",
+      "selector": { "type": "exact", "values": ["Core 300", "Core 300S", "Core P350"] },
+      "grade": "explicit",
+      "source_url": "https://levoit.com/products/core-300-4-stage-smoke-remover-replacement-filter"
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "c_levoit_core300_naming",
+      "part_id": "levoit_core300_rf",
+      "description": "Levoit 自家两页对 Core 300 系列兼容机型写法不一致：产品页 A 写 Core 300-P / Core P350-P / Core 300-P-RAC，产品页 B（Toxin Absorber）写 Core 300 / Core P350 / Core 300-RAC；'P' 后缀是否为包装版本未在页面说明",
+      "handling": "产品内并存展示两种写法并标注来源页；GEO 页面只陈述「厂商两处写法」这一可核验事实，不自行裁定",
+      "status": "unresolved_page_b_404"
+    },
+    {
+      "id": "c_aprilaire_35_variants",
+      "part_id": "aprilaire_35",
+      "description": "官网 Home Depot 页列 15 个机型，官方商城页多出 600MKZ/600KZ/700KZ/700MKZ 四个变体",
+      "handling": "取并集，但每条注明来自哪个页面；导出时保留来源列"
+    },
+    {
+      "id": "c_samsung_capacity_units",
+      "part_id": "samsung_haf_cin",
+      "description": "加版写 6 months/1200L，英版写 300 Gallons（1200L≈317 gal，非严格等价）",
+      "handling": "规格字段保留原始单位与原文，不做单位换算后的单一数字"
+    }
+  ]
+}

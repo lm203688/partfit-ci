@@ -1,0 +1,30 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Unit tests
+        run: node --test test/match.test.js test/due.test.js
+      - name: Data sanity (every fitment has a source)
+        run: |
+          node -e '
+            const d = require("./assets/data/fitment.json");
+            let bad = 0;
+            for (const f of d.fitments) {
+              if (!/^https:\/\//.test(f.source_url || "")) { console.log("missing source", f.id); bad++; }
+              if (!["explicit","rule"].includes(f.grade) && !["x"].includes("x")) { console.log("bad grade", f.id); bad++; }
+            }
+            for (const p of d.parts) if (!p.evidence || !p.evidence.length) { console.log("no evidence", p.id); bad++; }
+            console.log("parts", d.parts.length, "fitments", d.fitments.length, "selectors", d.fitments.reduce((n,f)=>n+f.selector.values.length,0));
+            if (bad) process.exit(1);
+          '

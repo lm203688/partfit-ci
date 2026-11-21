@@ -1,0 +1,32 @@
+{
+  "name": "PartFit",
+  "slug": "partfit",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "scheme": "partfit",
+  "userInterfaceStyle": "light",
+  "newArchEnabled": true,
+  "ios": {
+    "supportsTablet": false,
+    "bundleIdentifier": "com.example.partfit",
+    "buildNumber": "1",
+    "appleTeamId": "",
+    "infoPlist": {
+      "NSCameraUsageDescription": "Take a photo of an appliance model plate or the label on your old filter. Photos are processed on this device and never uploaded.",
+      "ITSAppUsesNonExemptEncryption": false
+    }
+  },
+  "android": {
+    "package": "com.example.partfit"
+  },
+  "plugins": [
+    "expo-sqlite",
+    "expo-notifications",
+    [
+      "expo-camera",
+      {
+        "cameraPermission": "Take a photo of an appliance model plate or the label on your old filter. Photos are processed on this device and never uploaded."
+      }
+    ]
+  ]
+}
