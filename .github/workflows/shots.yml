@@ -65,26 +65,25 @@ jobs:
           xcrun simctl status_bar "${{ steps.sim.outputs.name }}" override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
           xcrun simctl list devices | grep Booted
 
-      - name: Install and launch
+      - name: Install
         run: |
           set -x
           APP=$(find "$RUNNER_TEMP/dd/Build/Products" -maxdepth 2 -name "*.app" | head -1)
           echo "app=$APP"
+          ls "$APP" | head -40
+          find "$APP" \( -name "*.jsbundle" -o -name "*.hbc" \) | head -5
           xcrun simctl install "${{ steps.sim.outputs.name }}" "$APP"
-          xcrun simctl launch "${{ steps.sim.outputs.name }}" "$BUNDLE_ID"
-          sleep 1
 
       - name: Diagnose launch
         if: always()
         run: |
           DEV="${{ steps.sim.outputs.name }}"
+          echo "--- console launch (25s window)"
+          timeout 25 xcrun simctl launch --console-pty --terminate-running-process "$DEV" "$BUNDLE_ID" 2>&1 | head -80 || true
           echo "--- running apps"
           xcrun simctl spawn "$DEV" launchctl list | grep -i partfit || echo "not running"
-          echo "--- app log (last 3m)"
-          xcrun simctl spawn "$DEV" log show --style compact --last 3m --predicate 'processImagePath CONTAINS "PartFit"' 2>/dev/null | tail -60 || true
           echo "--- crash reports"
-          ls -lt ~/Library/Logs/DiagnosticReports 2>/dev/null | head -10 || true
-          for f in $(ls -t ~/Library/Logs/DiagnosticReports/PartFit* 2>/dev/null | head -2); do echo "== $f"; head -80 "$f"; done
+          for f in $(ls -t ~/Library/Logs/DiagnosticReports/PartFit* 2>/dev/null | head -2); do echo "== $f"; head -60 "$f"; done
 
       - name: Capture screens
         run: |
@@ -92,8 +91,9 @@ jobs:
           DEV="${{ steps.sim.outputs.name }}"
           OUT="$RUNNER_TEMP/shots"
           mkdir -p "$OUT"
-          # launch is above; the in-app screenshot tour moves: Home 0-4s, Result 4-9s, Detail 9-14s,
+          # Fresh launch so the in-app tour restarts: Home 0-4s, Result 4-9s, Detail 9-14s,
           # Lookup 14-19s, Sources 19s+. Capture inside each window.
+          xcrun simctl launch --terminate-running-process "$DEV" "$BUNDLE_ID"
           sleep 2
           xcrun simctl io "$DEV" screenshot "$OUT/01-home.png"
           sleep 3
