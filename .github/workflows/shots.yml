@@ -1,0 +1,106 @@
+name: shots
+
+on:
+  workflow_dispatch:
+
+env:
+  BUNDLE_ID: ${{ vars.PARTFIT_BUNDLE_ID }}
+  TEAM_ID: ${{ vars.PARTFIT_TEAM_ID }}
+  EXPO_PUBLIC_DEMO: "1"
+
+jobs:
+  screenshots:
+    runs-on: xcode-27
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci --legacy-peer-deps || npm install --no-audit --no-fund
+
+      - name: Prebuild iOS project
+        env:
+          PARTFIT_BUNDLE_ID: ${{ vars.PARTFIT_BUNDLE_ID }}
+          PARTFIT_TEAM_ID: ${{ vars.PARTFIT_TEAM_ID }}
+        run: npx expo prebuild --platform ios --clean --non-interactive
+
+      - name: Pick a 6.9in simulator
+        id: sim
+        run: |
+          xcrun simctl list devices available | head -40
+          NAME=$(xcrun simctl list devices available | grep -o 'iPhone 1[6-9] Pro Max' | head -1)
+          if [ -z "$NAME" ]; then NAME=$(xcrun simctl list devices available | grep -o 'iPhone 1[6-9] Plus' | head -1); fi
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "using: $NAME"
+
+      - name: Build for simulator
+        env:
+          EXPO_PUBLIC_DEMO: "1"
+        run: |
+          set -o pipefail
+          cd ios
+          WORKSPACE=$(ls -d *.xcworkspace | head -1)
+          SCHEME="${WORKSPACE%.xcworkspace}"
+          xcodebuild build \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/dd" \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tail -30
+
+      - name: Boot simulator
+        run: |
+          set -x
+          xcrun simctl boot "${{ steps.sim.outputs.name }}" || true
+          xcrun simctl bootstatus "${{ steps.sim.outputs.name }}" -b || true
+          xcrun simctl status_bar "${{ steps.sim.outputs.name }}" override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+          xcrun simctl list devices | grep Booted
+
+      - name: Install and launch
+        run: |
+          set -x
+          APP=$(find "$RUNNER_TEMP/dd/Build/Products" -maxdepth 2 -name "*.app" | head -1)
+          echo "app=$APP"
+          xcrun simctl install "${{ steps.sim.outputs.name }}" "$APP"
+          xcrun simctl launch "${{ steps.sim.outputs.name }}" "$BUNDLE_ID"
+          sleep 12
+
+      - name: Capture screens
+        run: |
+          set -x
+          DEV="${{ steps.sim.outputs.name }}"
+          OUT="$RUNNER_TEMP/shots"
+          mkdir -p "$OUT"
+          shot() { sleep 3; xcrun simctl io "$DEV" screenshot "$OUT/$1.png"; }
+          xcrun simctl openurl "$DEV" "partfit://"
+          shot 01-home
+          xcrun simctl openurl "$DEV" "partfit://result/XWFE"
+          shot 02-result-xwfe
+          xcrun simctl openurl "$DEV" "partfit://result/HAF-QIN"
+          shot 03-result-hafqin
+          xcrun simctl openurl "$DEV" "partfit://detail/1"
+          shot 04-detail
+          xcrun simctl openurl "$DEV" "partfit://lookup"
+          shot 05-lookup
+          xcrun simctl openurl "$DEV" "partfit://settings"
+          shot 06-settings
+          xcrun simctl openurl "$DEV" "partfit://sources"
+          shot 07-sources
+          ls -l "$OUT"
+          for f in "$OUT"/*.png; do echo "$f"; /usr/bin/sips -g pixelWidth -g pixelHeight "$f" 2>/dev/null | tail -2; done
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: partfit-shots
+          path: ${{ runner.temp }}/shots/*.png
+          if-no-files-found: warn
+          retention-days: 7

@@ -27,6 +27,23 @@ import { seedDemo } from './src/demo';
 const Stack = createNativeStackNavigator();
 const DEMO = process.env.EXPO_PUBLIC_DEMO === '1';
 
+// Deep links: partfit://result/<query>, partfit://detail/<id>, partfit://lookup, ...
+const linking = {
+  prefixes: ['partfit://'],
+  config: {
+    screens: {
+      Home: '',
+      Scan: 'scan/:mode',
+      Result: 'result/:query',
+      AddAppliance: 'add',
+      Detail: 'detail/:id',
+      Lookup: 'lookup',
+      Settings: 'settings',
+      Sources: 'sources',
+    },
+  },
+};
+
 /* ------------------------------------------------------------------ atoms */
 
 function Badge({ tone = 'neutral', children }) {
@@ -780,7 +797,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <NavigationContainer theme={navTheme}>
+      <NavigationContainer theme={navTheme} linking={linking}>
         <Stack.Navigator
           screenOptions={{
             headerStyle: { backgroundColor: colors.bg },
