@@ -74,6 +74,18 @@ jobs:
           xcrun simctl launch "${{ steps.sim.outputs.name }}" "$BUNDLE_ID"
           sleep 1
 
+      - name: Diagnose launch
+        if: always()
+        run: |
+          DEV="${{ steps.sim.outputs.name }}"
+          echo "--- running apps"
+          xcrun simctl spawn "$DEV" launchctl list | grep -i partfit || echo "not running"
+          echo "--- app log (last 3m)"
+          xcrun simctl spawn "$DEV" log show --style compact --last 3m --predicate 'processImagePath CONTAINS "PartFit"' 2>/dev/null | tail -60 || true
+          echo "--- crash reports"
+          ls -lt ~/Library/Logs/DiagnosticReports 2>/dev/null | head -10 || true
+          for f in $(ls -t ~/Library/Logs/DiagnosticReports/PartFit* 2>/dev/null | head -2); do echo "== $f"; head -80 "$f"; done
+
       - name: Capture screens
         run: |
           set -x
