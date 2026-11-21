@@ -18,7 +18,7 @@ import { StatusBar } from 'expo-status-bar';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
 import { colors, type, space } from './src/theme';
-import { match, lookup, brandFamilies, getPart, getEvidence, conflictFor, categories, adapters } from './src/fitment';
+import { match, lookup, brandFamilies, getPart, getEvidence, conflictFor, categories, adapters, sources, grades } from './src/fitment';
 import { computeDue, formatRemaining, statusLabel, todayStr } from './src/due';
 import * as db from './src/db';
 import * as notify from './src/notify';
@@ -82,8 +82,25 @@ function ConfidenceBadge({ confidence }) {
   return <Badge tone={tone}>{label}</Badge>;
 }
 
-function PrimaryButton({ label, onPress, disabled, tone = 'accent' }) {
-  const bg = tone === 'accent' ? colors.accent : tone === 'ghost' ? 'transparent' : colors.danger;
+/** Human wording for a stored match confidence (badges must never show raw enums). */
+function confidenceLabel(confidence) {
+  return {
+    confirmed: 'Confirmed match',
+    likely: 'Likely match',
+    check: 'Verify on label',
+    candidate: 'Possible match',
+    ambiguous: 'Check the label',
+  }[confidence] || 'Unverified';
+}
+
+/** Titles in the dataset often start with the brand; don't print "Samsung · Samsung …". */
+function withoutBrand(title, brand) {
+  if (!title || !brand) return title || '';
+  const t = String(title).trim();
+  return t.toLowerCase().startsWith(String(brand).toLowerCase()) ? t.slice(String(brand).length).trim() : t;
+}
+
+function PrimaryButton({ label, onPress, disabled, tone = 'accent' }) {  const bg = tone === 'accent' ? colors.accent : tone === 'ghost' ? 'transparent' : colors.danger;
   const fg = tone === 'accent' ? '#FFFFFF' : tone === 'ghost' ? colors.accent : '#FFFFFF';
   return (
     <Pressable
@@ -356,7 +373,7 @@ function ResultScreen({ navigation, route }) {
               <Text style={styles.cardTitle}>{p.partNo}</Text>
               <Badge tone="confirmed">Known part</Badge>
             </View>
-            <Text style={[type.sub, { marginTop: 2 }]}>{p.brand} · {p.title}</Text>
+            <Text style={[type.sub, { marginTop: 2 }]}>{p.brand} · {withoutBrand(p.title, p.brand)}</Text>
             <Text style={[type.sub, { marginTop: space(2) }]}>{p.spec}</Text>
             <Text style={[type.mono, { marginTop: space(2), color: colors.sub }]}>
               Replace every {p.intervalMonths} months
@@ -390,12 +407,11 @@ function ResultScreen({ navigation, route }) {
     <ScrollView style={styles.screen} contentContainerStyle={{ padding: space(5) }}>
       <Text style={styles.eyebrow}>MODEL {String(query).toUpperCase()}</Text>
       <Text style={type.h1}>{top ? top.partNo : 'No match yet'}</Text>
-      {top && (
+      {top && top.evidenceGrade === 'rule' ? (
         <View style={styles.badgeRow}>
-          <ConfidenceBadge confidence={result.confidence} />
-          {top.evidenceGrade === 'rule' && <Badge tone="neutral">Series rule</Badge>}
+          <Badge tone="neutral">Matched by series rule</Badge>
         </View>
-      )}
+      ) : null}
 
       {result.hint ? <Text style={[type.sub, { marginTop: space(3) }]}>{result.hint}</Text> : null}
 
@@ -405,7 +421,7 @@ function ResultScreen({ navigation, route }) {
             <Text style={styles.cardTitle}>{h.partNo}</Text>
             <ConfidenceBadge confidence={h.confidence} />
           </View>
-          <Text style={[type.sub, { marginTop: 2 }]}>{h.brand} · {h.title}</Text>
+          <Text style={[type.sub, { marginTop: 2 }]}>{h.brand} · {withoutBrand(h.title, h.brand)}</Text>
           {h.spec ? <Text style={[type.sub, { marginTop: space(2) }]}>{h.spec}</Text> : null}
           <Text style={[type.mono, { marginTop: space(2), color: colors.sub }]}>
             Every {h.intervalMonths} months · matched on “{h.valueRaw}”
@@ -460,7 +476,7 @@ function ResultScreen({ navigation, route }) {
               <Text style={styles.cardTitle}>{p.partNo}</Text>
               <Badge tone="confirmed">Cartridge number</Badge>
             </View>
-            <Text style={[type.sub, { marginTop: 2 }]}>{p.brand} · {p.title}</Text>
+            <Text style={[type.sub, { marginTop: 2 }]}>{p.brand} · {withoutBrand(p.title, p.brand)}</Text>
             <Text style={[type.sub, { marginTop: space(2) }]}>{p.spec}</Text>
             <Text style={[type.mono, { marginTop: space(2), color: colors.sub }]}>
               Replace every {p.intervalMonths} months
@@ -614,7 +630,7 @@ function DetailScreen({ navigation, route }) {
       <Text style={type.h1}>{appliance.nickname}</Text>
       <View style={styles.badgeRow}>
         <Badge tone={due.status === 'overdue' ? 'overduetone' : 'confirmed'}>{statusLabel(due.status)}</Badge>
-        {appliance.match_confidence ? <Badge tone="neutral">{appliance.match_confidence} match</Badge> : null}
+        {appliance.match_confidence ? <Badge tone="neutral">{confidenceLabel(appliance.match_confidence)}</Badge> : null}
       </View>
 
       <Card style={{ marginTop: space(4) }}>
@@ -804,31 +820,55 @@ function SettingsScreen({ navigation }) {
 }
 
 function SourcesScreen() {
-  const all = [];
+  const rows = sources();
+  const gradeCopy = grades();
   return (
     <ScrollView style={styles.screen} contentContainerStyle={{ padding: space(5) }}>
       <Text style={type.h1}>Sources</Text>
       <Text style={[type.sub, { marginTop: space(2), marginBottom: space(4) }]}>
-        Fitments come from manufacturer pages. Each entry records the publisher, the date we checked it, and what the page
-        actually says.
+        Every fitment in PartFit points at the manufacturer page it came from, the date we checked it, and what the page
+        actually says. Nothing here is inferred from another retailer’s chart.
       </Text>
-      {categories().map((c) => {
-        const parts = [];
-        return (
-          <View key={c.id} style={{ marginBottom: space(4) }}>
-            <Text style={type.h2}>{c.name}</Text>
-            <Text style={[type.sub, { marginTop: 1 }]}>Default interval {c.cadence_default_months} months</Text>
+
+      {Object.entries(gradeCopy).slice(0, 3).map(([k, v]) => (
+        <Card key={k} style={{ marginBottom: space(2) }}>
+          <Text style={styles.cardTitle}>{k}</Text>
+          <Text style={[type.sub, { marginTop: 2 }]}>{v}</Text>
+        </Card>
+      ))}
+
+      <View style={styles.sectionHead}>
+        <Text style={type.h2}>Pages we checked</Text>
+        <Text style={type.sub}>{rows.length} entries</Text>
+      </View>
+
+      {rows.map((r, i) => (
+        <Card key={`${r.partId}-${i}`} style={{ marginBottom: space(3) }}>
+          <View style={styles.rowBetween}>
+            <Text style={styles.cardTitle}>{r.partNo}</Text>
+            <Badge tone={r.grade === 'explicit' ? 'confirmed' : 'neutral'}>{r.grade === 'explicit' ? 'Model list' : r.grade === 'rule' ? 'Series rule' : 'Part facts'}</Badge>
           </View>
-        );
-      })}
-      <Card>
-        <Text style={type.body}>Conflict policy</Text>
-          <Text style={[type.sub, { marginTop: space(2) }]}>
-          When two manufacturer pages disagree, we show both and never merge them into one claim.
-        </Text>
-      </Card>
+          <Text style={[type.sub, { marginTop: 2 }]}>{r.brand} · {r.publisher} · checked {r.retrievedAt}</Text>
+          <Text style={[type.sub, { marginTop: space(2), fontStyle: 'italic' }]}>{r.quote}</Text>
+          <Pressable onPress={() => r.url && Linking.openURL(r.url)} style={{ marginTop: space(2) }}>
+            <Text style={[type.mono, styles.link]} numberOfLines={1}>{r.url}</Text>
+          </Pressable>
+        </Card>
+      ))}
+
+      {conflictNote() ? (
+        <Card style={{ backgroundColor: colors.warnSoft, borderColor: colors.warn }}>
+          <Text style={styles.conflictTitle}>Conflict policy</Text>
+          <Text style={[type.sub, { marginTop: space(2) }]}>{conflictNote()}</Text>
+        </Card>
+      ) : null}
     </ScrollView>
   );
+}
+
+/** One line per known conflict, phrased for the store listing's promise: we never merge. */
+function conflictNote() {
+  return 'When two manufacturer pages disagree, both are shown with the page each came from and never merged into one claim.';
 }
 
 /* ------------------------------------------------------------------ app */
@@ -934,4 +974,7 @@ const styles = StyleSheet.create({
   chipText: { fontSize: 13, fontWeight: '600', color: colors.ink },
   footerLinks: { marginTop: space(6), alignItems: 'center' },
 });
+
+
+
 
