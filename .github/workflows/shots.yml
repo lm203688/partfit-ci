@@ -80,18 +80,17 @@ jobs:
           DEV="${{ steps.sim.outputs.name }}"
           OUT="$RUNNER_TEMP/applog"
           mkdir -p "$OUT"
-          echo "--- launch with stdout/stderr capture"
-          xcrun simctl launch --terminate-running-process --stdout "$OUT/out.log" --stderr "$OUT/err.log" "$DEV" "$BUNDLE_ID" || true
-          sleep 6
-          echo "--- stdout"; tail -40 "$OUT/out.log" 2>/dev/null || true
-          echo "--- stderr"; tail -60 "$OUT/err.log" 2>/dev/null || true
+          echo "--- console launch (returns when the app exits)"
+          set +e
+          xcrun simctl launch --console --terminate-running-process "$DEV" "$BUNDLE_ID" > "$OUT/console.log" 2>&1
+          echo "exit=$?"
+          set -e
+          tail -60 "$OUT/console.log" || true
           echo "--- running apps"
           xcrun simctl spawn "$DEV" launchctl list | grep -i partfit || echo "not running"
-          echo "--- unified log"
-          xcrun simctl spawn "$DEV" log show --last 2m --info --predicate 'process == "PartFit"' 2>/dev/null | tail -30 || true
           echo "--- crash reports"
-          find ~/Library/Logs/DiagnosticReports ~/Library/Developer/CoreSimulator -name '*.ips' -mmin -10 2>/dev/null | head -5
-          for f in $(find ~/Library/Logs/DiagnosticReports ~/Library/Developer/CoreSimulator -name 'PartFit*' -mmin -10 2>/dev/null | head -2); do echo "== $f"; head -50 "$f"; done
+          find ~/Library/Logs/DiagnosticReports ~/Library/Developer/CoreSimulator -type f -name '*.ips' -mmin -10 2>/dev/null | head -5
+          for f in $(find ~/Library/Logs/DiagnosticReports ~/Library/Developer/CoreSimulator -type f -name 'PartFit*' -mmin -10 2>/dev/null | head -2); do echo "== $f"; head -40 "$f"; done || true
 
       - name: Capture screens
         run: |
