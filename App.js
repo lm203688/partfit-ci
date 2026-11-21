@@ -10,7 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -26,6 +26,9 @@ import { seedDemo } from './src/demo';
 
 const Stack = createNativeStackNavigator();
 const DEMO = process.env.EXPO_PUBLIC_DEMO === '1';
+// Screenshot tour: only when a build explicitly sets EXPO_PUBLIC_SHOTS=1 (CI screenshot job).
+const SHOTS = process.env.EXPO_PUBLIC_SHOTS === '1';
+const navRef = createNavigationContainerRef();
 
 // Deep links: partfit://result/<query>, partfit://detail/<id>, partfit://lookup, ...
 const linking = {
@@ -794,10 +797,22 @@ const navTheme = {
 };
 
 export default function App() {
+  useEffect(() => {
+    if (!SHOTS) return undefined;
+    const tour = [
+      { at: 4000, run: () => navRef.navigate('Result', { query: 'XWFE', mode: 'model' }) },
+      { at: 9000, run: () => navRef.navigate('Detail', { id: 1 }) },
+      { at: 14000, run: () => navRef.navigate('Lookup') },
+      { at: 19000, run: () => navRef.navigate('Sources') },
+    ];
+    const timers = tour.map((s) => setTimeout(() => { if (navRef.isReady()) s.run(); }, s.at));
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <NavigationContainer theme={navTheme} linking={linking}>
+      <NavigationContainer theme={navTheme} linking={linking} ref={navRef}>
         <Stack.Navigator
           screenOptions={{
             headerStyle: { backgroundColor: colors.bg },

@@ -7,6 +7,7 @@ env:
   BUNDLE_ID: ${{ vars.PARTFIT_BUNDLE_ID }}
   TEAM_ID: ${{ vars.PARTFIT_TEAM_ID }}
   EXPO_PUBLIC_DEMO: "1"
+  EXPO_PUBLIC_SHOTS: "1"
 
 jobs:
   screenshots:
@@ -71,7 +72,7 @@ jobs:
           echo "app=$APP"
           xcrun simctl install "${{ steps.sim.outputs.name }}" "$APP"
           xcrun simctl launch "${{ steps.sim.outputs.name }}" "$BUNDLE_ID"
-          sleep 12
+          sleep 1
 
       - name: Capture screens
         run: |
@@ -79,21 +80,18 @@ jobs:
           DEV="${{ steps.sim.outputs.name }}"
           OUT="$RUNNER_TEMP/shots"
           mkdir -p "$OUT"
-          shot() { sleep 3; xcrun simctl io "$DEV" screenshot "$OUT/$1.png"; }
-          xcrun simctl openurl "$DEV" "partfit://"
-          shot 01-home
-          xcrun simctl openurl "$DEV" "partfit://result/XWFE"
-          shot 02-result-xwfe
-          xcrun simctl openurl "$DEV" "partfit://result/HAF-QIN"
-          shot 03-result-hafqin
-          xcrun simctl openurl "$DEV" "partfit://detail/1"
-          shot 04-detail
-          xcrun simctl openurl "$DEV" "partfit://lookup"
-          shot 05-lookup
-          xcrun simctl openurl "$DEV" "partfit://settings"
-          shot 06-settings
-          xcrun simctl openurl "$DEV" "partfit://sources"
-          shot 07-sources
+          # launch is above; the in-app screenshot tour moves: Home 0-4s, Result 4-9s, Detail 9-14s,
+          # Lookup 14-19s, Sources 19s+. Capture inside each window.
+          sleep 2
+          xcrun simctl io "$DEV" screenshot "$OUT/01-home.png"
+          sleep 3
+          xcrun simctl io "$DEV" screenshot "$OUT/02-result-xwfe.png"
+          sleep 5
+          xcrun simctl io "$DEV" screenshot "$OUT/03-detail.png"
+          sleep 5
+          xcrun simctl io "$DEV" screenshot "$OUT/04-lookup.png"
+          sleep 5
+          xcrun simctl io "$DEV" screenshot "$OUT/05-sources.png"
           ls -l "$OUT"
           for f in "$OUT"/*.png; do echo "$f"; /usr/bin/sips -g pixelWidth -g pixelHeight "$f" 2>/dev/null | tail -2; done
 
