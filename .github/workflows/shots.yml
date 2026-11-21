@@ -12,7 +12,7 @@ env:
 jobs:
   screenshots:
     runs-on: xcode-27
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -39,9 +39,18 @@ jobs:
           echo "name=$NAME" >> "$GITHUB_OUTPUT"
           echo "using: $NAME"
 
-      - name: Build for simulator
-        env:
-          EXPO_PUBLIC_DEMO: "1"
+      - name: Start Metro for the debug build
+        run: |
+          set -x
+          EXPO_PUBLIC_DEMO=1 EXPO_PUBLIC_SHOTS=1 npx expo start --port 8081 --non-interactive > "$RUNNER_TEMP/metro.log" 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8081/status | grep -q running; then echo "metro up after ${i}s"; break; fi
+            sleep 2
+          done
+          curl -s http://localhost:8081/status || true
+          tail -20 "$RUNNER_TEMP/metro.log"
+
+      - name: Build debug app for simulator
         run: |
           set -o pipefail
           cd ios
@@ -50,12 +59,12 @@ jobs:
           xcodebuild build \
             -workspace "$WORKSPACE" \
             -scheme "$SCHEME" \
-            -configuration Release \
+            -configuration Debug \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath "$RUNNER_TEMP/dd" \
             CODE_SIGNING_ALLOWED=NO \
-            2>&1 | tail -30
+            2>&1 | tail -25
 
       - name: Boot simulator
         run: |
@@ -65,32 +74,14 @@ jobs:
           xcrun simctl status_bar "${{ steps.sim.outputs.name }}" override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
           xcrun simctl list devices | grep Booted
 
-      - name: Install
+      - name: Install and launch
         run: |
           set -x
           APP=$(find "$RUNNER_TEMP/dd/Build/Products" -maxdepth 2 -name "*.app" | head -1)
           echo "app=$APP"
-          ls "$APP" | head -40
-          find "$APP" \( -name "*.jsbundle" -o -name "*.hbc" \) | head -5
           xcrun simctl install "${{ steps.sim.outputs.name }}" "$APP"
-
-      - name: Diagnose launch
-        if: always()
-        run: |
-          DEV="${{ steps.sim.outputs.name }}"
-          OUT="$RUNNER_TEMP/applog"
-          mkdir -p "$OUT"
-          echo "--- console launch (returns when the app exits)"
-          set +e
-          xcrun simctl launch --console --terminate-running-process "$DEV" "$BUNDLE_ID" > "$OUT/console.log" 2>&1
-          echo "exit=$?"
-          set -e
-          tail -60 "$OUT/console.log" || true
-          echo "--- running apps"
-          xcrun simctl spawn "$DEV" launchctl list | grep -i partfit || echo "not running"
-          echo "--- crash reports"
-          find ~/Library/Logs/DiagnosticReports ~/Library/Developer/CoreSimulator -type f -name '*.ips' -mmin -10 2>/dev/null | head -5
-          for f in $(find ~/Library/Logs/DiagnosticReports ~/Library/Developer/CoreSimulator -type f -name 'PartFit*' -mmin -10 2>/dev/null | head -2); do echo "== $f"; head -40 "$f"; done || true
+          xcrun simctl launch --terminate-running-process "${{ steps.sim.outputs.name }}" "$BUNDLE_ID"
+          sleep 6
 
       - name: Capture screens
         run: |
@@ -98,9 +89,9 @@ jobs:
           DEV="${{ steps.sim.outputs.name }}"
           OUT="$RUNNER_TEMP/shots"
           mkdir -p "$OUT"
-          # Fresh launch so the in-app tour restarts: Home 0-4s, Result 4-9s, Detail 9-14s,
-          # Lookup 14-19s, Sources 19s+. Capture inside each window.
-          xcrun simctl launch --terminate-running-process "$DEV" "$BUNDLE_ID"
+          # Tour restarts only on a fresh process; relaunch so the timing windows line up:
+          # Home 0-4s, Result 4-9s, Detail 9-14s, Lookup 14-19s, Sources 19s+.
+          xcrun simctl launch --terminate-running-process "$DEV" "$BUNDLE_ID" || true
           sleep 2
           xcrun simctl io "$DEV" screenshot "$OUT/01-home.png"
           sleep 3
@@ -112,7 +103,16 @@ jobs:
           sleep 5
           xcrun simctl io "$DEV" screenshot "$OUT/05-sources.png"
           ls -l "$OUT"
-          for f in "$OUT"/*.png; do echo "$f"; /usr/bin/sips -g pixelWidth -g pixelHeight "$f" 2>/dev/null | tail -2; done
+
+      - name: Metro log tail
+        if: always()
+        run: tail -60 "$RUNNER_TEMP/metro.log" || true
+
+      - name: Crash reports
+        if: always()
+        run: |
+          xcrun simctl spawn "${{ steps.sim.outputs.name }}" log show --last 3m --predicate 'eventMessage CONTAINS[c] "partfit"' 2>/dev/null | tail -40 || true
+          find ~/Library/Logs/DiagnosticReports ~/Library/Developer/CoreSimulator -type f -name 'PartFit*' -mmin -10 2>/dev/null | head -3
 
       - uses: actions/upload-artifact@v4
         if: always()
