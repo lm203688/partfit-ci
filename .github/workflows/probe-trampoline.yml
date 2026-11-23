@@ -1,0 +1,24 @@
+name: probe-trampoline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 15
+    steps:
+      - name: trampoline
+        run: |
+          set +e
+          HUB="/Applications/Xcode_27.1.app/Contents/Applications/DeviceHub.app"
+          echo "=== url schemes full ==="
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleURLTypes:0:CFBundleURLSchemes' "$HUB/Contents/Info.plist" 2>&1
+          echo "=== trampoline help ==="
+          "$HUB/Contents/MacOS/DevicesTrampoline" --help 2>&1 | head -30
+          echo "=== trampoline strings ==="
+          strings "$HUB/Contents/MacOS/DevicesTrampoline" 2>/dev/null | grep -i -E 'fold|unfold|posture|hinge|display|open|url' | head -30
+          echo "=== hub binary size ==="
+          ls -la "$HUB/Contents/MacOS"
+          echo "=== hub strings (posture) ==="
+          strings "$HUB/Contents/MacOS/DeviceHub" 2>/dev/null | grep -i -E 'posture|hinge|unfolded|folded|clamshell' | head -30
