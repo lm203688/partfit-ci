@@ -35,8 +35,8 @@ jobs:
 
       - run: npm ci --legacy-peer-deps || npm install --no-audit --no-fund
 
-      - name: Unit tests (bundled data + date engine)
-        run: node --test test/match.test.js test/due.test.js
+      - name: Unit tests (bundled data + date engine + feedback loop)
+        run: node --test test/
 
       - name: Install signing certificate
         env:
