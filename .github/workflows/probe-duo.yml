@@ -4,19 +4,17 @@ jobs:
   probe:
     runs-on: xcode-27
     steps:
-      - name: duotype plist
+      - name: locate duotype
         run: |
           set -x
-          DT=~/Library/Developer/CoreSimulator/Profiles/DeviceTypes
-          ls "$DT" | grep -i duo || true
-          P=$(ls -d "$DT"/*Duo*.simdevicetype 2>/dev/null | head -1)
+          P=$(find /Applications/Xcode_27.1.app -name "iPhone-Duo.simdevicetype" -maxdepth 8 2>/dev/null | head -1)
           echo "P=$P"
-          if [ -n "$P" ]; then
-            plutil -p "$P/Contents/Resources/profile.plist" | head -60
-          fi
-      - name: screens
+          ls "$P/Contents/Resources" 2>/dev/null
+          plutil -p "$P/Contents/Resources/profile.plist" 2>/dev/null | head -80
+      - name: metrics
         run: |
-          set -x
-          DT=~/Library/Developer/CoreSimulator/Profiles/DeviceTypes
-          P=$(ls -d "$DT"/*Duo*.simdevicetype 2>/dev/null | head -1)
-          plutil -p "$P/Contents/Resources/profile.plist" 2>/dev/null | grep -i -A4 -E "Screen|Pixel|Size|Scale|Fold" | head -80 || true
+          P=$(find /Applications/Xcode_27.1.app -name "iPhone-Duo.simdevicetype" -maxdepth 8 2>/dev/null | head -1)
+          plutil -p "$P/Contents/Resources/profile.plist" 2>/dev/null | grep -i -E "Screen|Pixel|Width|Height|Scale|Fold|Inch|Point" | head -60
+          echo "--- iphone18pro ---"
+          P2=$(find /Applications/Xcode_27.1.app -name "iPhone-18-Pro.simdevicetype" -maxdepth 8 2>/dev/null | head -1)
+          plutil -p "$P2/Contents/Resources/profile.plist" 2>/dev/null | grep -i -E "Screen|Pixel|Width|Height|Scale" | head -40
