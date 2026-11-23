@@ -1,0 +1,27 @@
+name: probe-duo
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: macos-latest
+    steps:
+      - name: xcode and sdk
+        run: |
+          xcodebuild -version
+          echo "-----SDKS-----"
+          xcodebuild -showsdks || true
+          echo "-----XCODE APPS-----"
+          ls /Applications | grep -i xcode || true
+      - name: sim runtimes
+        run: |
+          xcrun simctl list runtimes || true
+      - name: devicetypes
+        run: |
+          echo "-----ALL DEVICE TYPES-----"
+          xcrun simctl list devicetypes || true
+      - name: duo match
+        run: |
+          echo "-----DUO/FOLD/18 MATCH-----"
+          xcrun simctl list devicetypes | grep -i -E "duo|fold|iphone 18" || echo "NO MATCH"
+      - name: devices
+        run: |
+          xcrun simctl list devices available || true
