@@ -1,0 +1,44 @@
+name: probe-duo6
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 40
+    steps:
+      - name: boot + probe screens
+        run: |
+          set +e
+          UDID=$(xcrun simctl create "DuoP6" com.apple.CoreSimulator.SimDeviceType.iPhone-Duo com.apple.CoreSimulator.SimRuntime.iOS-27-1)
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          mkdir -p out
+          echo "===== home screenshots ====="
+          xcrun simctl io "$UDID" screenshot --display=1 out/home1.png
+          xcrun simctl io "$UDID" screenshot --display=3 out/home3.png
+          echo "===== power on display 3 ====="
+          xcrun simctl io "$UDID" screenConfig --display=3 power on 2>&1
+          sleep 6
+          xcrun simctl io "$UDID" screenshot --display=3 out/pon3.png
+          echo "===== power cycle display 3 ====="
+          xcrun simctl io "$UDID" screenConfig --display=3 power off 2>&1
+          sleep 3
+          xcrun simctl io "$UDID" screenConfig --display=3 power on 2>&1
+          sleep 8
+          xcrun simctl io "$UDID" screenshot --display=3 out/pcyc3.png
+          xcrun simctl io "$UDID" screenshot --display=1 out/pcyc1.png
+          echo "===== launch options ====="
+          xcrun simctl help launch 2>&1
+          echo "===== enumerate screens (summary) ====="
+          xcrun simctl io "$UDID" enumerate 2>&1 | grep -E '^    \(|Screen ID|Name:|Power state'
+          ls -l out
+          sips -g pixelWidth -g pixelHeight out/*.png
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-duo6-shots
+          path: out
+          if-no-files-found: warn
