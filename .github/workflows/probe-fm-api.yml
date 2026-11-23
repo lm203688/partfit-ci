@@ -8,17 +8,21 @@ jobs:
     runs-on: xcode-27
     timeout-minutes: 15
     steps:
-      - name: Dump FoundationModels interface symbols
+      - name: Dump FoundationModels signatures
         run: |
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
           IF="$SDK/System/Library/Frameworks/FoundationModels.framework/Modules/FoundationModels.swiftmodule/arm64e-apple-ios.swiftinterface"
-          ls -la "$(dirname "$IF")"
-          echo "LINES=$(wc -l < "$IF")"
-          echo "=========== availability / model ==========="
-          grep -nE 'SystemLanguageModel|Availability|UnavailableReason|deviceNotEligible|appleIntelligence' "$IF" | head -60
-          echo "=========== session ==========="
-          grep -nE 'LanguageModelSession|func respond|struct Response|public init' "$IF" | head -60
-          echo "=========== private cloud ==========="
-          grep -niE 'privatecloud|private cloud|pcc|server|quota|entitlement' "$IF" | head -40
-          echo "=========== all top-level types ==========="
-          grep -nE '^public (struct|class|enum|protocol|actor|extension)' "$IF" | head -80
+          echo "=========== 30-75 ==========="
+          sed -n '30,75p' "$IF"
+          echo "=========== private cloud class body ==========="
+          sed -n '43,70p' "$IF"
+          echo "=========== quota usage ==========="
+          grep -n 'QuotaUsage' "$IF" | head -20
+          sed -n '/public struct QuotaUsage/,/^}/p' "$IF" | head -30
+          echo "=========== session inits ==========="
+          grep -nE 'class LanguageModelSession|struct Session|protocol LanguageModelSession' "$IF" | head -10
+          sed -n '1,30p' "$IF"
+          echo "=========== language model protocol ==========="
+          sed -n '1483,1500p' "$IF"
+          echo "=========== generic init search ==========="
+          grep -nB3 'instructions: FoundationModels::Instructions? = nil' "$IF" | head -60
