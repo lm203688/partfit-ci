@@ -1,0 +1,88 @@
+name: probe-duo2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphonesimulator --show-sdk-version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm ci
+
+      - name: Prebuild
+        run: npx expo prebuild --platform ios --clean --non-interactive
+
+      - name: Create + boot Duo
+        id: sim
+        run: |
+          UDID=$(xcrun simctl create "DuoProbe" com.apple.CoreSimulator.SimDeviceType.iPhone-Duo com.apple.CoreSimulator.SimRuntime.iOS-27-1)
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          open -a Simulator --args -CurrentDeviceUDID "$UDID"
+          sleep 15
+
+      - name: Build (Release, bundled JS)
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -workspace "*.xcworkspace" -scheme "$(basename *.xcodeproj .xcodeproj)" \
+            -configuration Release -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath "$RUNNER_TEMP/dd" \
+            CODE_SIGNING_ALLOWED=NO | tail -30
+          APP=$(find "$RUNNER_TEMP/dd/Build/Products/Release-iphonesimulator" -maxdepth 1 -name "*.app" | head -1)
+          echo "app=$APP" >> "$GITHUB_ENV"
+
+      - name: Install + launch
+        run: |
+          xcrun simctl install "${{ steps.sim.outputs.udid }}" "$app"
+          BUNDLE=$(defaults read "$(pwd)/$app/Info" CFBundleIdentifier 2>/dev/null || /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")
+          echo "bundle=$BUNDLE"
+          xcrun simctl launch "${{ steps.sim.outputs.udid }}" "$BUNDLE" || true
+          sleep 25
+
+      - name: Probe capabilities
+        run: |
+          echo "=== simctl io help ==="
+          xcrun simctl io --help 2>&1 | head -40 || true
+          echo "=== simctl help (grep fold/display/duo) ==="
+          xcrun simctl help 2>&1 | grep -i -E 'fold|display|duo|ui ' | head -30 || true
+          echo "=== simctl ui help ==="
+          xcrun simctl ui --help 2>&1 | head -40 || true
+          echo "=== Simulator menu ==="
+          osascript -e 'tell application "Simulator" to activate' -e 'delay 2' \
+                   -e 'tell application "System Events" to tell process "Simulator" to get name of every menu item of menu 1 of menu bar item "Device" of menu bar 1' 2>&1 | head -5 || true
+          echo "=== Simulator windows ==="
+          osascript -e 'tell application "System Events" to tell process "Simulator" to get {name, size, position} of every window' 2>&1 | head -5 || true
+
+      - name: Screenshots
+        run: |
+          mkdir -p out
+          for d in 3 1; do
+            for i in 1 2 3; do
+              xcrun simctl io "${{ steps.sim.outputs.udid }}" screenshot --display=$d "out/disp$d.png" && break || sleep 4
+            done
+          done
+          ls -l out
+          sips -g pixelWidth -g pixelHeight out/*.png || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-duo2-shots
+          path: out
+          if-no-files-found: warn
