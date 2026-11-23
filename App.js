@@ -1062,7 +1062,7 @@ export default function App() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg, paddingRight: duo.gutter }}>
       <AppScreens />
-      <AiAssist app="PartFit" hint="Water and air filter replacement intervals, part numbers and cross-reference guidance." gutter={duo.gutter} />
+      <AiAssist app="PartFit" hint="Water and air filter replacement intervals, part numbers and cross-reference guidance." gutter={duo.gutter} bottom={96} />
     </View>
   );
 }
