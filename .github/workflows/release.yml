@@ -10,6 +10,7 @@ on:
 
 env:
   BUNDLE_ID: ${{ vars.PARTFIT_BUNDLE_ID }}
+  WIDGET_BUNDLE_ID: ${{ vars.PARTFIT_WIDGET_BUNDLE_ID }}
   TEAM_ID: ${{ vars.PARTFIT_TEAM_ID }}
 
 jobs:
@@ -52,14 +53,17 @@ jobs:
           security list-keychains -d user -s build.keychain $(security list-keychains -d user | tr -d '"')
           security find-identity -v -p codesigning build.keychain
 
-      - name: Install provisioning profile
+      - name: Install provisioning profiles
         env:
-          PROFILE_B64: ${{ secrets.PROFILE_MAIN_B64 }}
-          PROFILE_UUID: ${{ secrets.PROFILE_MAIN_UUID }}
+          PROFILE_MAIN_B64: ${{ secrets.PROFILE_MAIN_B64 }}
+          PROFILE_MAIN_UUID: ${{ secrets.PROFILE_MAIN_UUID }}
+          PROFILE_WIDGET_B64: ${{ secrets.PROFILE_WIDGET_B64 }}
+          PROFILE_WIDGET_UUID: ${{ secrets.PROFILE_WIDGET_UUID }}
         run: |
           set -x
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          printf '%s' "$PROFILE_B64" | base64 -d > "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+          printf '%s' "$PROFILE_MAIN_B64" | base64 -d > "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_MAIN_UUID.mobileprovision"
+          printf '%s' "$PROFILE_WIDGET_B64" | base64 -d > "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_WIDGET_UUID.mobileprovision"
           ls -l "$HOME/Library/MobileDevice/Provisioning Profiles"
 
       - name: Write App Store Connect API key
@@ -74,11 +78,17 @@ jobs:
         env:
           PARTFIT_BUNDLE_ID: ${{ vars.PARTFIT_BUNDLE_ID }}
           PARTFIT_TEAM_ID: ${{ vars.PARTFIT_TEAM_ID }}
+          PARTFIT_WIDGET_BUNDLE_ID: ${{ vars.PARTFIT_WIDGET_BUNDLE_ID }}
+          PARTFIT_PROFILE_MAIN: ${{ secrets.PROFILE_MAIN_UUID }}
+          PARTFIT_PROFILE_WIDGET: ${{ secrets.PROFILE_WIDGET_UUID }}
         run: npx expo prebuild --platform ios --clean --non-interactive
 
+      - name: Check target signing settings
+        run: |
+          grep -o 'PROVISIONING_PROFILE_SPECIFIER = [^;]*' ios/*.xcodeproj/project.pbxproj || true
+          ls ios/PartFitWidget || true
+
       - name: Archive
-        env:
-          PROFILE_UUID: ${{ secrets.PROFILE_MAIN_UUID }}
         run: |
           set -o pipefail
           cd ios
@@ -90,9 +100,6 @@ jobs:
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath "$RUNNER_TEMP/partfit.xcarchive" \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" \
             DEVELOPMENT_TEAM="$TEAM_ID" \
             OTHER_CODE_SIGN_FLAGS="--keychain build.keychain" \
             2>&1 | tail -80
@@ -100,7 +107,8 @@ jobs:
       - name: Export ipa
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          PROFILE_UUID: ${{ secrets.PROFILE_MAIN_UUID }}
+          PROFILE_MAIN_UUID: ${{ secrets.PROFILE_MAIN_UUID }}
+          PROFILE_WIDGET_UUID: ${{ secrets.PROFILE_WIDGET_UUID }}
         run: |
           set -o pipefail
           cat > "$RUNNER_TEMP/export.plist" <<PLIST
@@ -114,7 +122,8 @@ jobs:
             <key>signingCertificate</key><string>Apple Distribution</string>
             <key>provisioningProfiles</key>
             <dict>
-              <key>$BUNDLE_ID</key><string>$PROFILE_UUID</string>
+              <key>$BUNDLE_ID</key><string>$PROFILE_MAIN_UUID</string>
+              <key>$WIDGET_BUNDLE_ID</key><string>$PROFILE_WIDGET_UUID</string>
             </dict>
             <key>uploadSymbols</key><true/>
             <key>stripSwiftSymbols</key><true/>
@@ -125,7 +134,6 @@ jobs:
             -archivePath "$RUNNER_TEMP/partfit.xcarchive" \
             -exportOptionsPlist "$RUNNER_TEMP/export.plist" \
             -exportPath "$RUNNER_TEMP/ipa" \
-            -allowProvisioningUpdates \
             OTHER_CODE_SIGN_FLAGS="--keychain build.keychain" \
             2>&1 | tail -60
           ls -l "$RUNNER_TEMP/ipa" || true
@@ -135,19 +143,26 @@ jobs:
           set -x
           IPA=$(find "$RUNNER_TEMP/ipa" -name "*.ipa" | head -1)
           echo "ipa=$IPA"
+          unzip -l "$IPA" | grep -Ei 'appex|PlugIns' || true
           rm -rf "$RUNNER_TEMP/ipa-x" && mkdir -p "$RUNNER_TEMP/ipa-x"
           unzip -q "$IPA" -d "$RUNNER_TEMP/ipa-x"
           APP=$(find "$RUNNER_TEMP/ipa-x/Payload" -maxdepth 1 -name "*.app" | head -1)
           echo "app=$APP"
           plutil -p "$APP/Info.plist" | grep -Ei 'CFBundleIdentifier|CFBundleVersion|CFBundleShortVersionString' || true
           ls "$APP" | grep -Ei 'ocr|PartFitOcr' || true
-          codesign -d --entitlements :- "$APP" 2>/dev/null | head -20 || true
           echo "== UIScene gate =="
           plutil -p "$APP/Info.plist" > "$RUNNER_TEMP/plist.txt"
           grep -n "UIApplicationSceneManifest" "$RUNNER_TEMP/plist.txt" || { echo "FAIL: no scene manifest in signed ipa"; exit 1; }
           sed -n '/UIApplicationSceneManifest/,+12p' "$RUNNER_TEMP/plist.txt"
           grep -n "class SceneDelegate" ios/*/AppDelegate.swift || { echo "FAIL: SceneDelegate missing"; exit 1; }
           echo "OK: signed ipa adopts UIScene lifecycle"
+          echo "== widget gate =="
+          test -d "$APP/PlugIns/PartFitWidget.appex" || { echo "FAIL: widget appex missing"; exit 1; }
+          plutil -p "$APP/PlugIns/PartFitWidget.appex/Info.plist" | grep -Ei 'CFBundleIdentifier|CFBundleVersion|NSExtensionPointIdentifier' || true
+          codesign -d --entitlements :- "$APP" 2>/dev/null | grep -A3 'application-groups' || { echo "FAIL: app missing app group entitlement"; exit 1; }
+          codesign -d --entitlements :- "$APP/PlugIns/PartFitWidget.appex" 2>/dev/null | grep -A3 'application-groups' || { echo "FAIL: widget missing app group entitlement"; exit 1; }
+          codesign -dv "$APP/PlugIns/PartFitWidget.appex" 2>&1 | grep -Ei 'Identifier|TeamIdentifier' | head -4 || true
+          echo "OK: widget bundled and signed with app group"
 
       - name: Upload to App Store Connect
         if: ${{ inputs.upload }}
