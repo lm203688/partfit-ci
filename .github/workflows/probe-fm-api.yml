@@ -10,21 +10,15 @@ jobs:
     steps:
       - name: Dump FoundationModels interface symbols
         run: |
-          set -x
-          xcodebuild -version
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
-          echo "SDK=$SDK"
-          ls -la "$SDK/System/Library/Frameworks" | grep -i foundation || true
-          FW="$SDK/System/Library/Frameworks/FoundationModels.framework"
-          if [ ! -d "$FW" ]; then FW="$SDK/System/Library/Frameworks/FoundationModels.framework"; fi
-          echo "--- framework tree ---"
-          ls -R "$FW" 2>/dev/null | head -60
-          echo "--- swiftinterface files ---"
-          find "$SDK" -name '*.swiftinterface' -path '*FoundationModels*' 2>/dev/null | head -20
-          for f in $(find "$SDK" -name '*.swiftinterface' -path '*FoundationModels*' 2>/dev/null | head -3); do
-            echo "===== $f ($(wc -l < "$f") lines) ====="
-            grep -nE 'PrivateCloud|privateCloud|PCC|LanguageModelSession|SystemLanguageModel|LanguageModel|public final class|public struct|public func respond' "$f" | head -120
-          done
-          echo "--- header symbols ---"
-          HEADERS=$(find "$FW" -name '*.h' 2>/dev/null)
-          for h in $HEADERS; do echo "== $h"; grep -nE 'PrivateCloud|LanguageModel' "$h" | head -40; done
+          IF="$SDK/System/Library/Frameworks/FoundationModels.framework/Modules/FoundationModels.swiftmodule/arm64e-apple-ios.swiftinterface"
+          ls -la "$(dirname "$IF")"
+          echo "LINES=$(wc -l < "$IF")"
+          echo "=========== availability / model ==========="
+          grep -nE 'SystemLanguageModel|Availability|UnavailableReason|deviceNotEligible|appleIntelligence' "$IF" | head -60
+          echo "=========== session ==========="
+          grep -nE 'LanguageModelSession|func respond|struct Response|public init' "$IF" | head -60
+          echo "=========== private cloud ==========="
+          grep -niE 'privatecloud|private cloud|pcc|server|quota|entitlement' "$IF" | head -40
+          echo "=========== all top-level types ==========="
+          grep -nE '^public (struct|class|enum|protocol|actor|extension)' "$IF" | head -80
