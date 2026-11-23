@@ -30,6 +30,7 @@ import appJson from './app.json';
 import { exportCsv, exportJson } from './src/export';
 import { seedDemo } from './src/demo';
 import { useDuo } from './src/duo';
+import AiAssist from './src/aiAssist';
 
 const Stack = createNativeStackNavigator();
 const DEMO = process.env.EXPO_PUBLIC_DEMO === '1';
@@ -1061,6 +1062,7 @@ export default function App() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg, paddingRight: duo.gutter }}>
       <AppScreens />
+      <AiAssist app="PartFit" hint="Water and air filter replacement intervals, part numbers and cross-reference guidance." gutter={duo.gutter} />
     </View>
   );
 }
