@@ -9,20 +9,17 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Dump FoundationModels signatures
+        continue-on-error: true
         run: |
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
           IF="$SDK/System/Library/Frameworks/FoundationModels.framework/Modules/FoundationModels.swiftmodule/arm64e-apple-ios.swiftinterface"
-          echo "=========== 30-75 ==========="
-          sed -n '30,75p' "$IF"
-          echo "=========== private cloud class body ==========="
-          sed -n '43,70p' "$IF"
+          echo "=========== lines 30-80 ==========="
+          sed -n '30,80p' "$IF" || true
           echo "=========== quota usage ==========="
-          grep -n 'QuotaUsage' "$IF" | head -20
-          sed -n '/public struct QuotaUsage/,/^}/p' "$IF" | head -30
-          echo "=========== session inits ==========="
-          grep -nE 'class LanguageModelSession|struct Session|protocol LanguageModelSession' "$IF" | head -10
-          sed -n '1,30p' "$IF"
-          echo "=========== language model protocol ==========="
-          sed -n '1483,1500p' "$IF"
-          echo "=========== generic init search ==========="
-          grep -nB3 'instructions: FoundationModels::Instructions? = nil' "$IF" | head -60
+          grep -n 'QuotaUsage' "$IF" | head -20 || true
+          echo "=========== session decl ==========="
+          grep -nE 'LanguageModelSession' "$IF" | head -20 || true
+          echo "=========== instructions-init context ==========="
+          grep -n -B8 'instructions: FoundationModels::Instructions? = nil' "$IF" | head -90 || true
+          echo "=========== done ==========="
+          true
