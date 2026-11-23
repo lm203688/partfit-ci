@@ -1,0 +1,26 @@
+name: probe-host
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 15
+    steps:
+      - name: find GUI host
+        run: |
+          set +e
+          echo "=== /Applications ==="
+          ls -la /Applications | head -20
+          echo "=== DEV Applications ==="
+          ls -la /Applications/Xcode_27.1.app/Contents/Developer/Applications 2>&1 | head -20
+          echo "=== find apps ==="
+          find /Applications -maxdepth 9 -name "*.app" 2>/dev/null | grep -i -E 'simul|device|kit' | head -20
+          echo "=== mdfind ==="
+          mdfind -name "Simulator.app" 2>/dev/null | head -10
+          mdfind "kMDItemCFBundleIdentifier == 'com.apple.iphonesimulator'" 2>/dev/null | head -10
+          echo "=== xcodebuild -showsdks path ==="
+          xcode-select -p
+          echo "=== CoreSimulator killers ==="
+          ls /Library/Developer/DeviceKit 2>&1 | head
