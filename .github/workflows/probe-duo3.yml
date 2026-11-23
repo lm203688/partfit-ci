@@ -1,0 +1,20 @@
+name: probe-duo3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 20
+    steps:
+      - name: simctl help
+        run: |
+          set +e
+          echo "=== xcode-select ==="; xcode-select -p
+          echo "=== /Applications ==="; ls /Applications | head -20
+          echo "=== find Simulator.app ==="; find /Applications -maxdepth 6 -name "Simulator.app" 2>/dev/null | head
+          echo "=== simctl help ==="; xcrun simctl help 2>&1
+          echo "=== simctl io help ==="; xcrun simctl io 2>&1 | head -60
+          echo "=== simctl ui help ==="; xcrun simctl ui 2>&1 | head -40
+          echo "=== simctl list devicetypes (duo) ==="; xcrun simctl list devicetypes 2>&1 | grep -i duo
