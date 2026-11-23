@@ -1,0 +1,42 @@
+name: probe-duo7
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 40
+    steps:
+      - name: geometry + scene probe
+        run: |
+          set +e
+          UDID=$(xcrun simctl create "DuoP7" com.apple.CoreSimulator.SimDeviceType.iPhone-Duo com.apple.CoreSimulator.SimRuntime.iOS-27-1)
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          mkdir -p out
+          echo "===== enumerate full ====="
+          xcrun simctl io "$UDID" enumerate 2>&1
+          echo "===== launch Settings ====="
+          xcrun simctl launch "$UDID" com.apple.Preferences 2>&1
+          sleep 10
+          for d in 1 3 5; do xcrun simctl io "$UDID" screenshot --display=$d "out/after-settings$d.png" 2>&1; done
+          echo "===== geometry display 5 -> 2007x2853@3 ====="
+          xcrun simctl io "$UDID" screenConfig --display=5 geometry 2007x2853@3 2>&1
+          sleep 3
+          xcrun simctl io "$UDID" screenshot --display=5 out/geo5.png 2>&1
+          echo "===== geometry display 1 -> 2007x2853@3 ====="
+          xcrun simctl io "$UDID" screenConfig --display=1 geometry 2007x2853@3 2>&1
+          sleep 3
+          xcrun simctl io "$UDID" screenshot --display=1 out/geo1.png 2>&1
+          echo "===== re-enumerate summary ====="
+          xcrun simctl io "$UDID" enumerate 2>&1 | grep -E '^    \(|Screen ID|Device Name|Pixel Size|Chrome ID|Screen Type'
+          ls -l out
+          sips -g pixelWidth -g pixelHeight out/*.png
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-duo7-shots
+          path: out
+          if-no-files-found: warn
