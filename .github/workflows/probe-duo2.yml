@@ -14,6 +14,8 @@ jobs:
         run: |
           xcodebuild -version
           xcrun --sdk iphonesimulator --show-sdk-version
+          echo "DEVDIR=$(xcode-select -p)"
+          ls "$(xcode-select -p)/Applications" || true
 
       - uses: actions/setup-node@v4
         with:
@@ -32,42 +34,49 @@ jobs:
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
-          open -a Simulator --args -CurrentDeviceUDID "$UDID"
-          sleep 15
+          SIM="$(xcode-select -p)/Applications/Simulator.app"
+          echo "SIM=$SIM exists=$([ -d "$SIM" ] && echo yes || echo no)"
+          open -a "$SIM" --args -CurrentDeviceUDID "$UDID"
+          sleep 20
 
       - name: Build (Release, bundled JS)
         run: |
           set -o pipefail
           xcodebuild build \
-            -workspace "*.xcworkspace" -scheme "$(basename *.xcodeproj .xcodeproj)" \
+            -workspace "$(ls -d *.xcworkspace | head -1)" \
+            -scheme "$(basename "$(ls -d *.xcworkspace | head -1)" .xcworkspace)" \
             -configuration Release -sdk iphonesimulator \
             -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
             -derivedDataPath "$RUNNER_TEMP/dd" \
-            CODE_SIGNING_ALLOWED=NO | tail -30
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tail -20
           APP=$(find "$RUNNER_TEMP/dd/Build/Products/Release-iphonesimulator" -maxdepth 1 -name "*.app" | head -1)
+          echo "app=$APP"
           echo "app=$APP" >> "$GITHUB_ENV"
 
       - name: Install + launch
         run: |
+          set -x
           xcrun simctl install "${{ steps.sim.outputs.udid }}" "$app"
-          BUNDLE=$(defaults read "$(pwd)/$app/Info" CFBundleIdentifier 2>/dev/null || /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")
+          BUNDLE=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")
           echo "bundle=$BUNDLE"
           xcrun simctl launch "${{ steps.sim.outputs.udid }}" "$BUNDLE" || true
           sleep 25
 
       - name: Probe capabilities
         run: |
+          echo "=== simctl help ==="
+          xcrun simctl help 2>&1 | head -80
           echo "=== simctl io help ==="
-          xcrun simctl io --help 2>&1 | head -40 || true
-          echo "=== simctl help (grep fold/display/duo) ==="
-          xcrun simctl help 2>&1 | grep -i -E 'fold|display|duo|ui ' | head -30 || true
+          xcrun simctl io --help 2>&1 | head -50
           echo "=== simctl ui help ==="
-          xcrun simctl ui --help 2>&1 | head -40 || true
-          echo "=== Simulator menu ==="
-          osascript -e 'tell application "Simulator" to activate' -e 'delay 2' \
-                   -e 'tell application "System Events" to tell process "Simulator" to get name of every menu item of menu 1 of menu bar item "Device" of menu bar 1' 2>&1 | head -5 || true
-          echo "=== Simulator windows ==="
-          osascript -e 'tell application "System Events" to tell process "Simulator" to get {name, size, position} of every window' 2>&1 | head -5 || true
+          xcrun simctl ui --help 2>&1 | head -40
+          echo "=== displays ==="
+          xcrun simctl io "${{ steps.sim.outputs.udid }}" enumerate 2>&1 | head -20 || true
+          echo "=== Simulator menu Device ==="
+          osascript -e 'tell application "Simulator" to activate' -e 'delay 3' \
+            -e 'tell application "System Events" to tell process "Simulator" to get name of every menu item of menu 1 of menu bar item "Device" of menu bar 1' 2>&1 | head -10 || true
+          echo "=== Simulator toolbar ==="
+          osascript -e 'tell application "System Events" to tell process "Simulator" to get {name, size, position} of every window' 2>&1 | head -10 || true
 
       - name: Screenshots
         run: |
@@ -79,6 +88,11 @@ jobs:
           done
           ls -l out
           sips -g pixelWidth -g pixelHeight out/*.png || true
+
+      - name: Host screenshot of Simulator window
+        run: |
+          screencapture -x out/host.png || true
+          ls -l out
 
       - uses: actions/upload-artifact@v4
         if: always()
