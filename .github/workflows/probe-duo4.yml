@@ -1,0 +1,48 @@
+name: probe-duo4
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 30
+    steps:
+      - name: env
+        run: |
+          set +e
+          xcode-select -p 2>&1
+          ls -la /Applications 2>&1 | head -30
+          echo "DEVELOPER_DIR=$DEVELOPER_DIR"
+          echo "--- simctl help head ---"
+          xcrun simctl help 2>&1 | head -70
+
+      - name: boot duo
+        id: sim
+        run: |
+          set +e
+          UDID=$(xcrun simctl create "DuoCfg" com.apple.CoreSimulator.SimDeviceType.iPhone-Duo com.apple.CoreSimulator.SimRuntime.iOS-27-1)
+          echo "UDID=$UDID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          echo "--- displays ---"
+          xcrun simctl io "$UDID" enumerate 2>&1
+          echo "--- screenConfig ---"
+          xcrun simctl io "$UDID" screenConfig 2>&1
+          echo "--- screenConfig help ---"
+          xcrun simctl io "$UDID" screenConfig help 2>&1
+          echo "--- screenshot both ---"
+          mkdir -p out
+          xcrun simctl io "$UDID" screenshot --display=3 out/a3.png 2>&1
+          xcrun simctl io "$UDID" screenshot --display=1 out/a1.png 2>&1
+          ls -l out
+          echo "--- recordVideo probe ---"
+          xcrun simctl io "$UDID" recordVideo --help 2>&1 | head -20
+          echo "$UDID" > udid.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-duo4-shots
+          path: out
+          if-no-files-found: warn
