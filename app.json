@@ -9,7 +9,7 @@
   "ios": {
     "supportsTablet": false,
     "bundleIdentifier": "com.example.partfit",
-    "buildNumber": "3",
+    "buildNumber": "4",
     "appleTeamId": "",
     "infoPlist": {
       "NSCameraUsageDescription": "Take a photo of an appliance model plate or the label on your old filter. Photos are processed on this device and never uploaded.",
@@ -20,6 +20,7 @@
     "package": "com.example.partfit"
   },
   "plugins": [
+    "./plugins/withUIScene.cjs",
     "expo-sqlite",
     [
       "expo-camera",
@@ -29,5 +30,3 @@
     ]
   ]
 }
-
-
