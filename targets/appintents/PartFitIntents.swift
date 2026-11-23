@@ -17,6 +17,7 @@ private enum PFStore {
   }
 }
 
+@available(iOS 16.0, *)
 struct NextFilterIntent: AppIntent {
   static var title: LocalizedStringResource = "Next filter"
   static var description: IntentDescription? = IntentDescription(
@@ -41,6 +42,7 @@ struct NextFilterIntent: AppIntent {
   }
 }
 
+@available(iOS 16.0, *)
 struct OpenPartFitIntent: AppIntent {
   static var title: LocalizedStringResource = "Open PartFit"
   static var description: IntentDescription? = IntentDescription(
@@ -53,6 +55,7 @@ struct OpenPartFitIntent: AppIntent {
   }
 }
 
+@available(iOS 16.0, *)
 struct PartFitShortcuts: AppShortcutsProvider {
   static var appShortcuts: [AppShortcut] {
     AppShortcut(
@@ -72,3 +75,5 @@ struct PartFitShortcuts: AppShortcutsProvider {
     )
   }
 }
+
+
