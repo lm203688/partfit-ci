@@ -22,6 +22,7 @@
   "plugins": [
     "./plugins/withUIScene.cjs",
     "./plugins/withWidget.cjs",
+    "./plugins/withAppIntents.cjs",
     "expo-sqlite",
     [
       "expo-camera",
