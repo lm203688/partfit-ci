@@ -1,0 +1,68 @@
+name: probe-paths
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Locate Simulator host and try to open it
+        continue-on-error: true
+        run: |
+          set -x
+          mkdir -p out
+          xcode-select -p > out/xcode-select.txt 2>&1 || true
+          ls /Applications > out/apps.txt 2>&1 || true
+          find /Applications -maxdepth 6 -name "Simulator.app" > out/simapp.txt 2>&1 || true
+          find /Applications -maxdepth 6 -name "DeviceHub.app" >> out/simapp.txt 2>&1 || true
+          cat out/simapp.txt || true
+
+          UDID=$(xcrun simctl create "DuoGUI" "com.apple.CoreSimulator.SimDeviceType.iPhone-Duo" "com.apple.CoreSimulator.SimRuntime.iOS-27-1" || true)
+          echo "UDID=$UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b || true
+          xcrun simctl launch "$UDID" com.apple.Preferences || true
+
+          SIM=$(head -1 out/simapp.txt)
+          echo "SIM=$SIM"
+          if [ -d "$SIM" ]; then
+            open "$SIM" --args -CurrentDeviceUDID "$UDID" || true
+            sleep 45
+          fi
+
+          cat > "$RUNNER_TEMP/windows.swift" <<'SWIFT'
+          import Foundation
+          import CoreGraphics
+          let opts: CGWindowListOption = [.optionAll, .excludeDesktopElements]
+          if let list = CGWindowListCopyWindowInfo(opts, kCGNullWindowID) as? [[String: Any]] {
+            for w in list {
+              let owner = w[kCGWindowOwnerName as String] as? String ?? "?"
+              let name = w[kCGWindowName as String] as? String ?? ""
+              let num = w[kCGWindowNumber as String] as? Int ?? -1
+              let b = w[kCGWindowBounds as String] as? [String: Any] ?? [:]
+              print("\(num)\t\(owner)\t\(name)\t\(b)")
+            }
+          }
+          SWIFT
+          swift "$RUNNER_TEMP/windows.swift" > out/windows-all.txt 2>&1 || true
+          cat out/windows-all.txt || true
+
+          ps aux | grep -i -E "Simulator|DeviceHub" | grep -v grep > out/ps.txt 2>&1 || true
+          cat out/ps.txt || true
+
+          xcrun simctl io "$UDID" screenshot --display=3 "out/after-sim-d3.png" || true
+          xcrun simctl io "$UDID" screenshot --display=5 "out/after-sim-d5.png" || true
+          xcrun simctl io "$UDID" screenshot --display=1 "out/after-sim-d1.png" || true
+          ls -l out || true
+          for f in out/*.png; do sips -g pixelWidth -g pixelHeight "$f" || true; done
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-paths
+          path: out
+          if-no-files-found: warn
