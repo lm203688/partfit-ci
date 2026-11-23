@@ -1,0 +1,84 @@
+name: probe-diag
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: xcode-27
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: xcodebuild -version
+
+      - name: Runtimes and device types
+        continue-on-error: true
+        run: |
+          set -x
+          mkdir -p diag
+          xcrun simctl list runtimes > diag/runtimes.txt 2>&1 || true
+          xcrun simctl list devicetypes > diag/devicetypes.txt 2>&1 || true
+          xcrun simctl list runtimes -j > diag/runtimes.json 2>&1 || true
+          cat diag/runtimes.txt
+
+      - name: Try iPad against every runtime
+        continue-on-error: true
+        run: |
+          set -x
+          > diag/ipad-tries.txt
+          for RT in $(xcrun simctl list runtimes | grep -o 'com.apple.CoreSimulator.SimRuntime.[A-Za-z0-9-]*' | sort -u); do
+            for T in $(grep -o 'com.apple.CoreSimulator.SimDeviceType.iPad[a-zA-Z0-9-]*' diag/devicetypes.txt | sort -u); do
+              OUT=$(xcrun simctl create "PadT" "$T" "$RT" 2>&1 || true)
+              if echo "$OUT" | grep -q 'Unable|Incompatible|error'; then
+                echo "FAIL $RT $T :: $(echo "$OUT" | head -1)" >> diag/ipad-tries.txt
+              else
+                echo "OK   $RT $T -> $OUT" >> diag/ipad-tries.txt
+                UDID_PAD=$OUT
+                xcrun simctl boot "$UDID_PAD" || true
+                xcrun simctl bootstatus "$UDID_PAD" -b || true
+                xcrun simctl io "$UDID_PAD" screenshot diag/pad-boot.png || true
+                xcrun simctl shutdown "$UDID_PAD" || true
+                xcrun simctl delete "$UDID_PAD" || true
+              fi
+            done
+          done
+          sort -u diag/ipad-tries.txt -o diag/ipad-tries.txt || true
+          grep -c OK diag/ipad-tries.txt || true
+          head -40 diag/ipad-tries.txt
+
+      - name: Duo scene-display can it host a system app
+        continue-on-error: true
+        run: |
+          set -x
+          UDID=$(xcrun simctl create "DuoDiag" "com.apple.CoreSimulator.SimDeviceType.iPhone-Duo" "com.apple.CoreSimulator.SimRuntime.iOS-27-1" || true)
+          echo "UDID=$UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b || true
+
+          plutil -p "$HOME/Library/Developer/CoreSimulator/Devices/$UDID/device.plist" > diag/device-plist.txt 2>&1 || true
+          grep -ril "fold" "$HOME/Library/Developer/CoreSimulator/Devices/$UDID" 2>/dev/null | head -10 > diag/fold-files.txt || true
+          cat diag/fold-files.txt || true
+
+          # put a system app on screen and see whether the scene display composites
+          xcrun simctl launch "$UDID" com.apple.Preferences || true
+          sleep 8
+          xcrun simctl io "$UDID" screenshot --display=1 diag/pref-outer.png || true
+          xcrun simctl io "$UDID" screenshot --display=5 diag/pref-scene.png || true
+          xcrun simctl io "$UDID" screenConfig --display=5 geometry 2007x2853@3 || true
+          sleep 6
+          xcrun simctl io "$UDID" screenshot --display=5 diag/pref-scene-2007.png || true
+          xcrun simctl io "$UDID" screenConfig --display=5 geometry 669x951@3 || true
+          sleep 6
+          xcrun simctl io "$UDID" screenshot --display=5 diag/pref-scene-669.png || true
+          xcrun simctl io "$UDID" io enumerate > diag/duo-enumerate.txt 2>&1 || true
+          ls -l diag || true
+          for f in diag/*.png; do sips -g pixelWidth -g pixelHeight "$f" || true; done
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-diag
+          path: diag
+          if-no-files-found: warn
