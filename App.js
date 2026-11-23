@@ -29,6 +29,7 @@ import * as fb from './src/feedback';
 import appJson from './app.json';
 import { exportCsv, exportJson } from './src/export';
 import { seedDemo } from './src/demo';
+import { useDuo } from './src/duo';
 
 const Stack = createNativeStackNavigator();
 const DEMO = process.env.EXPO_PUBLIC_DEMO === '1';
@@ -1056,6 +1057,15 @@ const navTheme = {
 };
 
 export default function App() {
+  const duo = useDuo();
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.bg, paddingRight: duo.gutter }}>
+      <AppScreens />
+    </View>
+  );
+}
+
+function AppScreens() {
   // Looping screenshot tour: five product screens, 6s each, so a CI capture pass
   // always lands on every screen no matter how slow the screenshot command is.
   useEffect(() => {
