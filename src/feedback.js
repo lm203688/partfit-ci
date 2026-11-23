@@ -50,15 +50,15 @@ export function buildBundle(input = {}, meta = {}, s = null) {
   const sess = s || getSession(meta);
   const category = CATEGORIES.includes(input.category) ? input.category : 'other';
   return {
-    app: s.app,
-    version: s.version,
-    build: s.build,
-    device: s.device,
-    os: s.os,
-    locale: s.locale,
+    app: sess.app,
+    version: sess.version,
+    build: sess.build,
+    device: sess.device,
+    os: sess.os,
+    locale: sess.locale,
     context: typeof input.context === 'string' ? input.context : null,
-    last_actions: s.actions.slice(-MAX_ACTIONS),
-    error_code: input.errorCode || s.errorCode || null,
+    last_actions: sess.actions.slice(-MAX_ACTIONS),
+    error_code: input.errorCode || sess.errorCode || null,
     category,
     user_note: typeof input.note === 'string' ? input.note.slice(0, 1200) : '',
     created_at: new Date().toISOString(),
