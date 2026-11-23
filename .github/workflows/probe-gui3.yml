@@ -1,0 +1,105 @@
+name: probe-gui3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Device Hub internals
+        continue-on-error: true
+        run: |
+          set -x
+          mkdir -p out
+          HUBAPP=/Applications/Xcode_27.1.app/Contents/Applications/DeviceHub.app
+          echo "$HUBAPP"
+          ls "$HUBAPP/Contents" > out/hub-contents.txt 2>&1 || true
+          ls "$HUBAPP/Contents/MacOS" >> out/hub-contents.txt 2>&1 || true
+          ls "$HUBAPP/Contents/Resources" | head -30 >> out/hub-contents.txt 2>&1 || true
+          cat out/hub-contents.txt || true
+          strings "$HUBAPP/Contents/MacOS/"* 2>/dev/null | grep -i -E "unfold|fold|duo|hinge|open device" | sort -u | head -40 > out/hub-strings.txt 2>&1 || true
+          cat out/hub-strings.txt || true
+          xcrun devicectl --help > out/devicectl-help.txt 2>&1 || true
+          head -40 out/devicectl-help.txt || true
+
+      - name: Open Device Hub, grab its window, list AX tree
+        continue-on-error: true
+        run: |
+          set -x
+          UDID=$(xcrun simctl create "DuoGUI" "com.apple.CoreSimulator.SimDeviceType.iPhone-Duo" "com.apple.CoreSimulator.SimRuntime.iOS-27-1" || true)
+          echo "UDID=$UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b || true
+          xcrun simctl launch "$UDID" com.apple.Preferences || true
+
+          HUBAPP=/Applications/Xcode_27.1.app/Contents/Applications/DeviceHub.app
+          open "$HUBAPP" --args -CurrentDeviceUDID "$UDID" || true
+          sleep 45
+
+          cat > "$RUNNER_TEMP/win.swift" <<'SWIFT'
+          import Foundation
+          import CoreGraphics
+          let opts: CGWindowListOption = [.optionAll, .excludeDesktopElements]
+          if let list = CGWindowListCopyWindowInfo(opts, kCGNullWindowID) as? [[String: Any]] {
+            for w in list {
+              let owner = w[kCGWindowOwnerName as String] as? String ?? "?"
+              let name = w[kCGWindowName as String] as? String ?? ""
+              let num = w[kCGWindowNumber as String] as? Int ?? -1
+              let b = w[kCGWindowBounds as String] as? [String: Any] ?? [:]
+              print("\(num)\t\(owner)\t\(name)\t\(b)")
+            }
+          }
+          SWIFT
+          swift "$RUNNER_TEMP/win.swift" > out/windows.txt 2>&1 || true
+          cat out/windows.txt || true
+
+          for w in $(awk -F'\t' '/Device Hub/ {print $1}' out/windows.txt); do
+            screencapture -x -o -l "$w" "out/hub-window-$w.png" || true
+          done
+          screencapture -x -o "out/desktop.png" || true
+
+          cat > "$RUNNER_TEMP/ax.swift" <<'SWIFT'
+          import Foundation
+          import ApplicationServices
+          func dump(_ el: AXUIElement, _ depth: Int) {
+            if depth > 6 { return }
+            let pad = String(repeating: "  ", count: depth)
+            var roleRef: CFTypeRef?
+            var titleRef: CFTypeRef?
+            var descRef: CFTypeRef?
+            AXUIElementCopyAttributeValue(el, kAXRoleAttribute as CFString, &roleRef)
+            AXUIElementCopyAttributeValue(el, kAXTitleAttribute as CFString, &titleRef)
+            AXUIElementCopyAttributeValue(el, kAXDescriptionAttribute as CFString, &descRef)
+            let role = (roleRef as? String) ?? "?"
+            let title = (titleRef as? String) ?? ""
+            let desc = (descRef as? String) ?? ""
+            print("\(pad)\(role) | \(title) | \(desc)")
+            var kids: CFTypeRef?
+            if AXUIElementCopyAttributeValue(el, kAXChildrenAttribute as CFString, &kids) == .success,
+               let arr = kids as? [AXUIElement] {
+              for k in arr { dump(k, depth + 1) }
+            }
+          }
+          print("trusted=\(AXIsProcessTrusted())")
+          let apps = NSWorkspace.shared.runningApplications.filter { $0.localizedName?.contains("Device Hub") == true }
+          for a in apps { dump(AXUIElementCreateApplication(a.processIdentifier), 0) }
+          SWIFT
+          sed -i '' 's/import ApplicationServices/import ApplicationServices\nimport AppKit/' "$RUNNER_TEMP/ax.swift"
+          swift "$RUNNER_TEMP/ax.swift" > out/ax-tree.txt 2>&1 || true
+          head -80 out/ax-tree.txt || true
+
+          xcrun simctl io "$UDID" screenshot --display=3 "out/d3.png" || true
+          xcrun simctl io "$UDID" screenshot --display=1 "out/d1.png" || true
+          ls -l out || true
+          for f in out/*.png; do sips -g pixelWidth -g pixelHeight "$f" || true; done
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-gui3
+          path: out
+          if-no-files-found: warn
