@@ -20,6 +20,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { colors, type, space } from './src/theme';
 import { match, lookup, brandFamilies, getPart, getEvidence, conflictFor, categories, adapters, sources, grades } from './src/fitment';
 import { computeDue, formatRemaining, statusLabel, todayStr } from './src/due';
+import { syncWidget } from './src/widget';
 import * as db from './src/db';
 import * as notify from './src/notify';
 import { exportCsv, exportJson } from './src/export';
@@ -157,6 +158,11 @@ function HomeScreen({ navigation, refreshKey }) {
     [items, today]
   );
   const dueSoon = rows.filter((r) => ['overdue', 'urgent', 'due'].includes(r.due.status)).length;
+
+  // 每次主屏数据变化都把"最该换的那台"推到小组件（非 iOS 环境静默跳过）
+  useEffect(() => {
+    if (ready) syncWidget(rows);
+  }, [rows, ready]);
 
   if (!ready) {
     return (
@@ -444,6 +450,12 @@ function ResultScreen({ navigation, route }) {
           <Text style={[type.mono, { marginTop: space(2), color: colors.sub }]}>
             Every {h.intervalMonths} months · matched on “{h.valueRaw}”
           </Text>
+
+          {h.otherSources && h.otherSources.length ? (
+            <Text style={[type.sub, { marginTop: space(1), color: colors.sub }]}>
+              Also listed by {h.otherSources.length} more manufacturer source{h.otherSources.length > 1 ? 's' : ''}
+            </Text>
+          ) : null}
 
           {h.conflict ? (
             <View style={styles.conflictBox}>
