@@ -2,18 +2,16 @@ name: probe-duo
 on: workflow_dispatch
 jobs:
   probe:
-    runs-on: macos-latest
+    runs-on: xcode-27
     steps:
-      - name: xcode and sdk
+      - name: toolchain
         run: |
           xcodebuild -version
-          echo "-----SDKS-----"
-          xcodebuild -showsdks || true
-          echo "-----XCODE APPS-----"
-          ls /Applications | grep -i xcode || true
-      - name: sim runtimes
-        run: |
-          xcrun simctl list runtimes || true
+          xcrun --sdk iphoneos --show-sdk-version
+          xcrun --sdk iphonesimulator --show-sdk-version
+          sw_vers
+      - name: runtimes
+        run: xcrun simctl list runtimes || true
       - name: devicetypes
         run: |
           echo "-----ALL DEVICE TYPES-----"
@@ -22,6 +20,9 @@ jobs:
         run: |
           echo "-----DUO/FOLD/18 MATCH-----"
           xcrun simctl list devicetypes | grep -i -E "duo|fold|iphone 18" || echo "NO MATCH"
-      - name: devices
+      - name: sdk headers hint
         run: |
-          xcrun simctl list devices available || true
+          SDKR=$(xcrun --sdk iphoneos --show-sdk-path)
+          echo "SDKROOT=$SDKR"
+          grep -rl -i "hingeAngle\|foldState\|Foldable" "$SDKR/System/Library/Frameworks/UIKit.framework/Headers" 2>/dev/null | head -20 || echo "no uikit match"
+          ls "$SDKR/System/Library/Frameworks" | grep -i -E "hinge|fold|duo" || echo "no framework match"
