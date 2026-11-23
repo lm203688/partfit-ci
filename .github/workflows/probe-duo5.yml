@@ -1,0 +1,26 @@
+name: probe-duo5
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 30
+    steps:
+      - name: boot duo
+        run: |
+          set +e
+          UDID=$(xcrun simctl create "DuoSC" com.apple.CoreSimulator.SimDeviceType.iPhone-Duo com.apple.CoreSimulator.SimRuntime.iOS-27-1)
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          echo "===== enumerate ====="
+          xcrun simctl io "$UDID" enumerate 2>&1
+          echo "===== screenConfig help ====="
+          xcrun simctl io "$UDID" screenConfig help 2>&1
+          echo "===== simctl help io ====="
+          xcrun simctl help io 2>&1
+          echo "===== screenshot d3 before ====="
+          mkdir -p out
+          xcrun simctl io "$UDID" screenshot --display=3 out/before3.png 2>&1
+          ls -l out
