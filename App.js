@@ -4,8 +4,10 @@ import {
   Alert,
   Linking,
   LogBox,
+  Platform,
   Pressable,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -23,6 +25,8 @@ import { computeDue, formatRemaining, statusLabel, todayStr } from './src/due';
 import { syncWidget } from './src/widget';
 import * as db from './src/db';
 import * as notify from './src/notify';
+import * as fb from './src/feedback';
+import appJson from './app.json';
 import { exportCsv, exportJson } from './src/export';
 import { seedDemo } from './src/demo';
 
@@ -783,6 +787,134 @@ function LookupScreen({ navigation }) {
   );
 }
 
+/* ------------------------------------------------------------------ feedback */
+
+const LOCALE = (() => {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().locale || 'en-US';
+  } catch (e) {
+    return 'en-US';
+  }
+})();
+
+function FeedbackScreen({ navigation }) {
+  const [category, setCategory] = useState('new_request');
+  const [note, setNote] = useState('');
+  const [preview, setPreview] = useState(false);
+  const [drafts, setDrafts] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const raw = await db.getSetting('feedback.drafts', '[]');
+      try {
+        setDrafts(JSON.parse(raw) || []);
+      } catch (e) {
+        setDrafts([]);
+      }
+    })();
+  }, []);
+
+  const meta = useMemo(
+    () => ({
+      version: appJson.version,
+      build: appJson.ios.buildNumber,
+      device: Platform.OS === 'ios' ? 'iPhone' : Platform.OS,
+      os: `${Platform.OS} ${Platform.Version}`,
+      locale: LOCALE,
+    }),
+    []
+  );
+
+  const bundle = useMemo(
+    () => ({
+      ...fb.buildBundle({ category, note }, meta),
+      id: fb.nextId(drafts.map((d) => d.id)),
+    }),
+    [category, note, drafts, meta]
+  );
+
+  const keepDraft = async () => {
+    const next = [{ ...bundle }, ...drafts].slice(0, 50);
+    setDrafts(next);
+    try {
+      await db.setSetting('feedback.drafts', JSON.stringify(next));
+    } catch (e) {}
+  };
+
+  const send = async () => {
+    await keepDraft();
+    const url = fb.toMailto(bundle);
+    const ok = await Linking.canOpenURL(`mailto:${fb.FEEDBACK_EMAIL}`).catch(() => false);
+    if (ok) {
+      Linking.openURL(url).catch(() => Alert.alert('No mail app', 'Copy the report instead, then send it from any device.'));
+    } else {
+      Alert.alert('No mail app found', 'Use the share button to copy the report.');
+    }
+  };
+
+  const share = async () => {
+    await keepDraft();
+    await Share.share({ message: fb.toText(bundle), title: `${bundle.id} PartFit feedback` });
+  };
+
+  return (
+    <ScrollView style={styles.screen} contentContainerStyle={{ padding: space(5) }}>
+      <Text style={type.h1}>Send feedback</Text>
+      <Text style={[type.sub, { marginTop: space(2) }]}>
+        {bundle.id} · goes straight to the developer. Nothing is uploaded from this app.
+      </Text>
+
+      <Card style={{ marginTop: space(4) }}>
+        <Text style={styles.fieldLabel}>What kind</Text>
+        <View style={styles.chipRow}>
+          {fb.CATEGORIES.map((k) => (
+            <Pressable key={k} onPress={() => setCategory(k)} style={[styles.chip, category === k && styles.chipOn]}>
+              <Text style={[styles.chipText, category === k && { color: '#FFF' }]}>{fb.CATEGORY_LABELS[k]}</Text>
+            </Pressable>
+          ))}
+        </View>
+      </Card>
+
+      <Card style={{ marginTop: space(3) }}>
+        <Text style={styles.fieldLabel}>What happened</Text>
+        <View style={[styles.input, { paddingVertical: space(2) }]}>
+          <TextInput
+            value={note}
+            onChangeText={setNote}
+            multiline
+            maxLength={1200}
+            placeholder="The model you scanned, the filter you expected, what PartFit showed."
+            placeholderTextColor={colors.sub}
+            style={{ minHeight: 96, fontSize: 15, color: colors.ink, textAlignVertical: 'top' }}
+          />
+        </View>
+        <Text style={[type.sub, { marginTop: space(2) }]}>
+          Do not type personal details. The model numbers you enter are not attached automatically.
+        </Text>
+      </Card>
+
+      <Pressable style={{ marginTop: space(3) }} onPress={() => setPreview((p) => !p)}>
+        <Text style={styles.link}>{preview ? 'Hide report' : 'Preview report'}</Text>
+      </Pressable>
+      {preview ? (
+        <Card style={{ marginTop: space(3) }}>
+          <Text style={type.mono}>{fb.toText(bundle)}</Text>
+        </Card>
+      ) : null}
+
+      <View style={{ marginTop: space(4) }}>
+        <PrimaryButton label="Send with mail" onPress={send} />
+      </View>
+      <View style={{ marginTop: space(2) }}>
+        <PrimaryButton tone="ghost" label="Copy / share report" onPress={share} />
+      </View>
+      <Text style={[type.sub, { marginTop: space(3) }]}>
+        {drafts.length ? `${drafts.length} draft${drafts.length > 1 ? 's' : ''} kept on this device.` : 'Drafts stay on this device.'}
+      </Text>
+    </ScrollView>
+  );
+}
+
 /* ------------------------------------------------------------------ settings */
 
 function SettingsScreen({ navigation }) {
@@ -837,12 +969,15 @@ function SettingsScreen({ navigation }) {
 
       <View style={styles.sectionHead}><Text style={type.h2}>About</Text></View>
       <Card>
-        <Text style={type.body}>PartFit 1.0</Text>
+        <Text style={type.body}>PartFit {appJson.version}</Text>
           <Text style={[type.sub, { marginTop: space(2) }]}>
           Offline by design: no account, no cloud, no analytics. Photos are read on this device.
         </Text>
         <Pressable style={{ marginTop: space(3) }} onPress={() => navigation.navigate('Sources')}>
           <Text style={styles.link}>Source list & conflict log</Text>
+        </Pressable>
+        <Pressable style={{ marginTop: space(3) }} onPress={() => navigation.navigate('Feedback')}>
+          <Text style={styles.link}>Send feedback / request a filter</Text>
         </Pressable>
       </Card>
     </ScrollView>
@@ -950,7 +1085,18 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <NavigationContainer theme={navTheme} linking={linking} ref={navRef}>
+      <NavigationContainer
+        theme={navTheme}
+        linking={linking}
+        ref={navRef}
+        onStateChange={(state) => {
+          try {
+            const idx = typeof state.index === 'number' ? state.index : (state.routes || []).length - 1;
+            const r = (state.routes || [])[idx];
+            if (r && r.name) fb.track(r.name);
+          } catch (e) {}
+        }}
+      >
         <Stack.Navigator
           screenOptions={{
             headerStyle: { backgroundColor: colors.bg },
@@ -967,6 +1113,7 @@ export default function App() {
           <Stack.Screen name="Lookup" component={LookupScreen} options={{ title: 'Find by number' }} />
           <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
           <Stack.Screen name="Sources" component={SourcesScreen} options={{ title: 'Sources' }} />
+          <Stack.Screen name="Feedback" component={FeedbackScreen} options={{ title: 'Send feedback' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
