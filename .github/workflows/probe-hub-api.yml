@@ -1,0 +1,26 @@
+name: probe-hub-api
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 15
+    steps:
+      - name: hub api
+        run: |
+          set +e
+          HUB="/Applications/Xcode_27.1.app/Contents/Applications/DeviceHub.app"
+          echo "=== sdef ==="
+          sdef "$HUB" 2>&1 | head -40
+          echo "=== plist url schemes ==="
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleURLTypes' "$HUB/Contents/Info.plist" 2>&1
+          echo "=== strings: fold ==="
+          strings "$HUB/Contents/MacOS/DeviceHub" 2>/dev/null | grep -i -E 'unfold|fold|hinge|posture|clamshell|open-lid' | head -30
+          echo "=== strings: url ==="
+          strings "$HUB/Contents/MacOS/DeviceHub" 2>/dev/null | grep -E '^devicehub|com\.apple\.DeviceHub\.' | head -20
+          echo "=== frameworks ==="
+          ls "$HUB/Contents/Frameworks" 2>&1 | head -20
+          echo "=== helper tools ==="
+          find "$HUB" -maxdepth 4 -type f -perm +111 2>/dev/null | head -20
