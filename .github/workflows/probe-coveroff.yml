@@ -1,0 +1,43 @@
+name: probe-coveroff
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 25
+    steps:
+      - name: cover off -> inner
+        run: |
+          set +e
+          UDID=$(xcrun simctl create "DuoCO" com.apple.CoreSimulator.SimDeviceType.iPhone-Duo com.apple.CoreSimulator.SimRuntime.iOS-27-1)
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          mkdir -p out
+          echo "=== baseline ==="
+          xcrun simctl io "$UDID" screenshot --display=1 out/a1.png 2>&1
+          xcrun simctl io "$UDID" screenshot --display=3 out/a3.png 2>&1
+          echo "=== power off cover (display 1) ==="
+          xcrun simctl io "$UDID" screenConfig --display=1 power off 2>&1
+          sleep 8
+          xcrun simctl io "$UDID" screenshot --display=3 out/b3.png 2>&1
+          xcrun simctl io "$UDID" screenshot --display=1 out/b1.png 2>&1
+          echo "=== launch app on inner? ==="
+          xcrun simctl launch "$UDID" com.apple.Preferences 2>&1
+          sleep 10
+          xcrun simctl io "$UDID" screenshot --display=3 out/c3.png 2>&1
+          xcrun simctl io "$UDID" screenshot --display=1 out/c1.png 2>&1
+          echo "=== power cover back on ==="
+          xcrun simctl io "$UDID" screenConfig --display=1 power on 2>&1
+          sleep 5
+          xcrun simctl io "$UDID" screenshot --display=3 out/d3.png 2>&1
+          ls -l out
+          sips -g pixelWidth -g pixelHeight out/*.png
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-coveroff-shots
+          path: out
+          if-no-files-found: warn
