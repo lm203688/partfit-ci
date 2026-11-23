@@ -1,0 +1,148 @@
+name: probe-inner2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: xcode-27
+    timeout-minutes: 80
+    env:
+      BUNDLE_ID: ${{ vars.PARTFIT_BUNDLE_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphonesimulator --show-sdk-version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+
+      - name: Prebuild
+        run: npx expo prebuild --platform ios --clean --non-interactive
+
+      - name: Build for simulator (Release)
+        run: |
+          set -o pipefail
+          cd ios
+          WORKSPACE=$(ls -d *.xcworkspace | head -1)
+          SCHEME="${WORKSPACE%.xcworkspace}"
+          xcodebuild build \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath "$RUNNER_TEMP/dd" \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tail -20
+
+      - name: Duo inner-display attempts
+        continue-on-error: true
+        run: |
+          set -x
+          mkdir -p out2
+          APP=$(find "$RUNNER_TEMP/dd/Build/Products/Release-iphonesimulator" -maxdepth 1 -name "*.app" | head -1)
+          UDID=$(xcrun simctl create "DuoCI2" "com.apple.CoreSimulator.SimDeviceType.iPhone-Duo" "com.apple.CoreSimulator.SimRuntime.iOS-27-1" || true)
+          echo "UDID=$UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b || true
+          xcrun simctl install "$UDID" "$APP" || true
+          xcrun simctl launch "$UDID" "$BUNDLE_ID" || true
+          sleep 20
+
+          # what commands exist at all
+          xcrun simctl help > out2/simctl-help.txt 2>&1 || true
+          xcrun simctl help io >> out2/simctl-help.txt 2>&1 || true
+
+          # baseline: outer display still works?
+          xcrun simctl io "$UDID" screenshot --display=1 out2/a-outer.png || true
+
+          # 1. power-cycle the inner panel by every alias we have
+          for ref in 3 LCD-1 primary-1 538CA3DA-4204-439D-90B0-BDE3AA38DD2D; do
+            echo "--- power cycle $ref ---"
+            xcrun simctl io "$UDID" screenConfig --display=$ref power off || true
+            sleep 2
+            xcrun simctl io "$UDID" screenConfig --display=$ref power on || true
+            sleep 3
+            xcrun simctl io "$UDID" screenshot --display=$ref "out2/b-$ref.png" || true
+            sleep 1
+          done
+
+          # 2. geometry rewrite on the inner panel, then screenshot
+          xcrun simctl io "$UDID" screenConfig --display=3 geometry 2007x2853@3 || true
+          sleep 3
+          xcrun simctl io "$UDID" screenshot --display=3 out2/c-geom.png || true
+          xcrun simctl io "$UDID" screenConfig --display=3 geometry 2007x2853@2 || true
+          sleep 3
+          xcrun simctl io "$UDID" screenshot --display=3 out2/c-geom2.png || true
+
+          # 3. resizable Scene screen: power on + geometry, then grab
+          xcrun simctl io "$UDID" screenConfig --display=5 power on || true
+          sleep 3
+          xcrun simctl io "$UDID" screenConfig --display=5 geometry 2007x2853@3 || true
+          sleep 3
+          xcrun simctl io "$UDID" screenshot --display=5 out2/d-scene-2007.png || true
+          xcrun simctl io "$UDID" screenConfig --display=5 geometry 669x951@3 || true
+          sleep 3
+          xcrun simctl io "$UDID" screenshot --display=5 out2/d-scene-669.png || true
+          for i in 1 2 3; do
+            xcrun simctl io "$UDID" screenshot --display=5 "out2/d-scene-try$i.png" && break || sleep 5
+          done
+
+          # 4. video capture path (different surface route than screenshot)
+          ( xcrun simctl io "$UDID" recordVideo --display=3 --codec=h264 --force out2/e-inner.mov & echo $! > "$RUNNER_TEMP/recpid" ) || true
+          sleep 6
+          PID=$(cat "$RUNNER_TEMP/recpid" 2>/dev/null || true)
+          echo "recorder pid=$PID"
+          [ -n "$PID" ] && kill -INT "$PID" 2>/dev/null || true
+          sleep 5
+          ls -l out2/e-inner.mov 2>/dev/null || true
+
+          # 5. does CoreSimulator expose a fold state we can flip?
+          grep -ri -l "fold" "$HOME/Library/Developer/CoreSimulator/Devices/$UDID" 2>/dev/null | head -5 || true
+          plutil -p "$HOME/Library/Developer/CoreSimulator/Devices/$UDID/device.plist" 2>/dev/null | head -60 || true
+
+          ls -l out2 || true
+          for f in out2/*.png out2/*.mov; do [ -f "$f" ] && sips -g pixelWidth -g pixelHeight "$f" || true; done
+
+      - name: iPad wide layout (try every compatible type)
+        continue-on-error: true
+        run: |
+          set -x
+          mkdir -p outpad
+          APP=$(find "$RUNNER_TEMP/dd/Build/Products/Release-iphonesimulator" -maxdepth 1 -name "*.app" | head -1)
+          xcrun simctl list devicetypes | grep -o 'com.apple.CoreSimulator.SimDeviceType.iPad[a-zA-Z0-9-]*' | sort -u > "$RUNNER_TEMP/ipads.txt"
+          head -20 "$RUNNER_TEMP/ipads.txt"
+          PAD=""
+          while read -r T; do
+            C=$(xcrun simctl create "PadCI" "$T" "com.apple.CoreSimulator.SimRuntime.iOS-27-1" 2>/dev/null || true)
+            if [ -n "$C" ] && [ "$C" != "" ] && ! echo "$C" | grep -q 'Unable'; then
+              PAD="$C"; echo "created $T -> $PAD"; break
+            fi
+          done < "$RUNNER_TEMP/ipads.txt"
+          echo "PAD=$PAD"
+          [ -n "$PAD" ] || { echo "no compatible iPad type"; exit 0; }
+          xcrun simctl boot "$PAD" || true
+          xcrun simctl bootstatus "$PAD" -b || true
+          xcrun simctl install "$PAD" "$APP" || true
+          xcrun simctl launch "$PAD" "$BUNDLE_ID" || true
+          sleep 25
+          xcrun simctl io "$PAD" screenshot outpad/pad-portrait.png || true
+          xcrun simctl ui "$PAD" appearance light || true
+          sips -g pixelWidth -g pixelHeight outpad/*.png 2>/dev/null || true
+          ls -l outpad || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-inner2
+          path: |
+            out2
+            outpad
+          if-no-files-found: warn
