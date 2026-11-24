@@ -1,685 +1,2441 @@
 {
-  "schema_version": "0.1",
-  "updated_at": "2026-11-21",
-  "notes": "First M0 sample. Fitment facts are graded: explicit (the page lists the model numbers), rule (a prefix or series rule), part_only (part-level facts only).",
-  "evidence_grades": {
-    "explicit": "The manufacturer page lists, model by model, the appliances that take this part.",
-    "rule": "The manufacturer expresses fitment as a prefix, a series or a compatible family, so the app has to pattern-match.",
-    "part_only": "Proves the part's spec and interval only, not that a specific appliance takes it.",
-    "third_party": "Non-manufacturer source (cross-reference charts from parts sellers); never used as a publishing basis."
+ "schema_version": "0.1",
+ "updated_at": "2026-11-24",
+ "notes": "First M0 sample. Fitment facts are graded: explicit (the page lists the model numbers), rule (a prefix or series rule), part_only (part-level facts only).",
+ "evidence_grades": {
+  "explicit": "The manufacturer page lists, model by model, the appliances that take this part.",
+  "rule": "The manufacturer expresses fitment as a prefix, a series or a compatible family, so the app has to pattern-match.",
+  "part_only": "Proves the part's spec and interval only, not that a specific appliance takes it.",
+  "third_party": "Non-manufacturer source (cross-reference charts from parts sellers); never used as a publishing basis."
+ },
+ "categories": [
+  {
+   "id": "fridge_water",
+   "name": "Refrigerator water filter",
+   "cadence_default_months": 6
   },
-  "categories": [
+  {
+   "id": "humidifier_panel",
+   "name": "Whole-house humidifier water panel",
+   "cadence_default_months": 12
+  },
+  {
+   "id": "air_purifier",
+   "name": "Air purifier filter",
+   "cadence_default_months": 8
+  }
+ ],
+ "parts": [
+  {
+   "id": "samsung_haf_cin",
+   "category": "fridge_water",
+   "brand": "Samsung",
+   "part_no": "DA29-00020B",
+   "title": "Samsung HAF-CIN/EXP refrigerator water filter",
+   "spec": "Internal twist-lock; capacity 300 gal / 1200 L; NSF 42 + 53",
+   "interval_months": 6,
+   "evidence": [
     {
-      "id": "fridge_water",
-      "name": "Refrigerator water filter",
-      "cadence_default_months": 6
+     "publisher": "Samsung Canada",
+     "url": "https://www.samsung.com/ca/home-appliance-accessories/refrigerators-filter-haf-cin-haf-cin-exp/",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Page title states 6 months / 1200 L and lists 28 compatible models (starting with RF28K9070SR/AA)."
     },
     {
-      "id": "humidifier_panel",
-      "name": "Whole-house humidifier water panel",
-      "cadence_default_months": 12
-    },
-    {
-      "id": "air_purifier",
-      "name": "Air purifier filter",
-      "cadence_default_months": 8
+     "publisher": "Samsung UK",
+     "url": "https://www.samsung.com/uk/home-appliance-accessories/accessory-filter-haf-cin-haf-cin-exp/",
+     "retrieved_at": "2026-11-21",
+     "grade": "part_only",
+     "quote": "For Use in System Model No. DA97-08006A-B; Replacement Cartridge Code DA29-00020B; Capacity 300 Gallons"
     }
-  ],
-  "parts": [
+   ]
+  },
+  {
+   "id": "samsung_haf_qin",
+   "category": "fridge_water",
+   "brand": "Samsung",
+   "part_no": "DA97-17376B",
+   "title": "Samsung HAF-QIN refrigerator water filter",
+   "spec": "Internal; 2-pack SKU HAF-QIN/2P/EXP",
+   "interval_months": 6,
+   "evidence": [
     {
-      "id": "samsung_haf_cin",
-      "category": "fridge_water",
-      "brand": "Samsung",
-      "part_no": "DA29-00020B",
-      "title": "Samsung HAF-CIN/EXP refrigerator water filter",
-      "spec": "Internal twist-lock; capacity 300 gal / 1200 L; NSF 42 + 53",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "Samsung Canada",
-          "url": "https://www.samsung.com/ca/home-appliance-accessories/refrigerators-filter-haf-cin-haf-cin-exp/",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Page title states 6 months / 1200 L and lists 28 compatible models (starting with RF28K9070SR/AA)."
-        },
-        {
-          "publisher": "Samsung UK",
-          "url": "https://www.samsung.com/uk/home-appliance-accessories/accessory-filter-haf-cin-haf-cin-exp/",
-          "retrieved_at": "2026-11-21",
-          "grade": "part_only",
-          "quote": "For Use in System Model No. DA97-08006A-B; Replacement Cartridge Code DA29-00020B; Capacity 300 Gallons"
-        }
-      ]
-    },
-    {
-      "id": "samsung_haf_qin",
-      "category": "fridge_water",
-      "brand": "Samsung",
-      "part_no": "DA97-17376B",
-      "title": "Samsung HAF-QIN refrigerator water filter",
-      "spec": "Internal; 2-pack SKU HAF-QIN/2P/EXP",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "Samsung US (builder)",
-          "url": "https://www.samsung.com/us/business/builder/our-appliances/home-appliances-accessories/refrigerators/haf-qin-refrigerator-water-filter-2-pack-haf-qin-2p-exp/",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Lists wildcard model strings such as BRF365200**, RF23A9071**, RF27CG5400**."
-        }
-      ]
-    },
-    {
-      "id": "samsung_hafin2",
-      "category": "fridge_water",
-      "brand": "Samsung",
-      "part_no": "DA29-00003G",
-      "title": "Samsung HAFIN2/EXP refrigerator water filter",
-      "spec": "Internal twist-lock; supersedes DA29-00003B",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "Samsung Australia (business)",
-          "url": "https://www.samsung.com/au/business/home-appliance-accessories/hafin2exp-hafin2-exp/",
-          "retrieved_at": "2026-11-21",
-          "grade": "part_only",
-          "quote": "For Use in System Model No. DA97-06317A; Replacement Cartridge Code DA29-00003G (replaces the older model DA29-00003B and is also compatible)"
-        }
-      ]
-    },
-    {
-      "id": "lg_lt1000p",
-      "category": "fridge_water",
-      "brand": "LG",
-      "part_no": "LT1000P",
-      "title": "LG LT1000P refrigerator water filter",
-      "spec": "6 month / 200 gal; part numbers ADQ74793501, AGF80300704/705, ADQ74793507, AGF80300703",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "LG Canada Support",
-          "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Model number table: LFCC23596 / LFCS27596 / LFD22716ST / LFD22786SD to LT1000P; LFD20786 / LFD22786 to LT700P; LFD21860 / 21870 / LFD22860 / LFD23860 to LT600P"
-        },
-        {
-          "publisher": "LG Australia",
-          "url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "LT1000P covers 31 models in the GF- and SG-series."
-        },
-        {
-          "publisher": "LG US business spec sheet (LF24Z6530S)",
-          "url": "https://www.lg.com/us/business/download/resources/CT00021979/LF24Z6530S_LG_Pro_Builder_Spec_Sheet[20240821_225459].pdf",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "ACCESSORIES: Replacement Water Filter LT1000P / Fresh Air Filter LT120F"
-        }
-      ]
-    },
-    {
-      "id": "lg_lt700p",
-      "category": "fridge_water",
-      "brand": "LG",
-      "part_no": "LT700P",
-      "title": "LG LT700P refrigerator water filter",
-      "spec": "Twist-on cartridge",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "LG Canada Support",
-          "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "In the same model table the LT700P column is marked for LFD20786 and LFD22786."
-        }
-      ]
-    },
-    {
-      "id": "lg_lt600p",
-      "category": "fridge_water",
-      "brand": "LG",
-      "part_no": "LT600P",
-      "title": "LG LT600P refrigerator water filter",
-      "spec": "Twist-on cartridge",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "LG Canada Support",
-          "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "In the same model table the LT600P column is marked for LFD21860, LFD21870, LFD22860 and LFD23860."
-        }
-      ]
-    },
-    {
-      "id": "ge_xwfe",
-      "category": "fridge_water",
-      "brand": "GE Appliances",
-      "part_no": "XWFE",
-      "title": "GE XWFE refrigerator water filter",
-      "spec": "6 in H x 2.25 in W x 2 in D; 170 gal; RFID leak sensing",
-      "interval_months": 6,
-      "supersedes": [
-        "XWF"
-      ],
-      "evidence": [
-        {
-          "publisher": "GE Appliances Support",
-          "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
-          "retrieved_at": "2026-11-21",
-          "grade": "rule",
-          "quote": "The XWFE replacement section says it fits models beginning with GBE21, GDE21, GDE25, GFE24, GFE26, GNE21, GNE25, GNE27, GWE19, GYE18, QNE27, GSE25, GSS23, GSS25, GZS22, PSE25 and CZS22 (17 prefixes)."
-        },
-        {
-          "publisher": "GE Appliances Support",
-          "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=000060638",
-          "retrieved_at": "2026-11-21",
-          "grade": "rule",
-          "quote": "XWFE is backward compatible with XWF; XWF cannot be used in the newer XWFE machines, which read the filter with the panel."
-        }
-      ]
-    },
-    {
-      "id": "ge_gswf",
-      "category": "fridge_water",
-      "brand": "GE Appliances",
-      "part_no": "GSWF",
-      "title": "GE GSWF refrigerator water filter",
-      "spec": "Top-freezer / bottom-freezer cartridge",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "GE Appliances Support",
-          "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
-          "retrieved_at": "2026-11-21",
-          "grade": "part_only",
-          "quote": "The page points GSWF to a top-and-bottom-freezer replacement video but lists no specific models."
-        }
-      ]
-    },
-    {
-      "id": "whirlpool_edr1rxd1",
-      "category": "fridge_water",
-      "brand": "Whirlpool (everydrop)",
-      "part_no": "EDR1RXD1",
-      "title": "everydrop Filter 1 (Purple)",
-      "spec": "Push-in; NSF 42/53/401",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "Whirlpool",
-          "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR1RXD1.html",
-          "retrieved_at": "2026-11-21",
-          "grade": "part_only",
-          "quote": "Fits with brand: Amana, JennAir, Kenmore, KitchenAid, Maytag, Whirlpool — brand and appliance type only, no specific model numbers."
-        }
-      ]
-    },
-    {
-      "id": "aprilaire_35",
-      "category": "humidifier_panel",
-      "brand": "AprilAire",
-      "part_no": "35",
-      "title": "AprilAire Water Panel 35",
-      "spec": "13 x 10 x 2 in",
-      "interval_months": 12,
-      "evidence": [
-        {
-          "publisher": "AprilAire",
-          "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Water Panel 35 | Filter size 13\" x 10\" x 2\" | Humidifier models: 300, 350, 360, 560, 560A, 568, 600, 600A, 600M, 700, 700A, 700M, 760, 760A, 768 | Replace once per heating season"
-        },
-        {
-          "publisher": "AprilAire Shop",
-          "url": "https://shop.aprilaire.com/products/aprilaire-water-panel-35/1000",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Compatible Models also includes 600MKZ, 600KZ, 700KZ and 700MKZ — four variants more than the site list."
-        }
-      ]
-    },
-    {
-      "id": "aprilaire_45",
-      "category": "humidifier_panel",
-      "brand": "AprilAire",
-      "part_no": "45",
-      "title": "AprilAire Water Panel 45",
-      "spec": "13 x 10 x 2 in",
-      "interval_months": 6,
-      "evidence": [
-        {
-          "publisher": "AprilAire",
-          "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Water Panel 45 | 13\" x 10\" x 2\" | Models: 400, 400A, 400M | Replace twice per heating season"
-        }
-      ]
-    },
-    {
-      "id": "aprilaire_10",
-      "category": "humidifier_panel",
-      "brand": "AprilAire",
-      "part_no": "10",
-      "title": "AprilAire Water Panel 10",
-      "spec": "10 x 10 x 2 in",
-      "interval_months": 12,
-      "evidence": [
-        {
-          "publisher": "AprilAire",
-          "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Water Panel 10 | 10\" x 10\" x 2\" | Models: 110, 220, 500, 500A, 500M, 550, 550A, 558 | Replace once per heating season"
-        },
-        {
-          "publisher": "AprilAire owner's manual (PDF, via Home Depot CDN)",
-          "url": "https://images.thdstatic.com/catalog/pdfImages/04/0486fc34-1e73-4bad-8aa0-b3972a4ac52f.pdf",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Water Panel table in the manual: 300 to 35, 400 to 45, 500 to 10, 600 to 35, 700 to 35."
-        }
-      ]
-    },
-    {
-      "id": "levoit_core300_rf",
-      "category": "air_purifier",
-      "brand": "Levoit",
-      "part_no": "Core 300-P-RF",
-      "title": "Levoit Core 300 series original 3-stage filter",
-      "spec": "3-stage (pre / HEPA / carbon); 6-8 months",
-      "interval_months": 8,
-      "evidence": [
-        {
-          "publisher": "Levoit (product page A)",
-          "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Compatible with only: Core 300-P, Core P350-P, Core 300-P-RAC"
-        },
-        {
-          "publisher": "Levoit (product page B, Toxin Absorber)",
-          "url": "https://levoit.com/products/core300-air-purifier-replacement-filter-toxin-absorber",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Compatible with only: Core 300, Core P350, Core 300-RAC (this page returned 404 when re-checked on 2026-11-21, so the conclusion is downgraded to pending review).",
-          "check_status": 404
-        }
-      ]
-    },
-    {
-      "id": "levoit_core300_rf_sr",
-      "category": "air_purifier",
-      "brand": "Levoit",
-      "part_no": "Core 300-RF-SR",
-      "title": "Levoit Core 300 4-stage smoke remover filter",
-      "spec": "4-stage with ARC carbon",
-      "interval_months": 8,
-      "evidence": [
-        {
-          "publisher": "Levoit",
-          "url": "https://levoit.com/products/core-300-4-stage-smoke-remover-replacement-filter",
-          "retrieved_at": "2026-11-21",
-          "grade": "explicit",
-          "quote": "Compatible with only: Core 300, Core 300S, Core P350"
-        }
-      ]
+     "publisher": "Samsung US (builder)",
+     "url": "https://www.samsung.com/us/business/builder/our-appliances/home-appliances-accessories/refrigerators/haf-qin-refrigerator-water-filter-2-pack-haf-qin-2p-exp/",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Lists wildcard model strings such as BRF365200**, RF23A9071**, RF27CG5400**."
     }
-  ],
-  "fitments": [
+   ]
+  },
+  {
+   "id": "samsung_hafin2",
+   "category": "fridge_water",
+   "brand": "Samsung",
+   "part_no": "DA29-00003G",
+   "title": "Samsung HAFIN2/EXP refrigerator water filter",
+   "spec": "Internal twist-lock; supersedes DA29-00003B",
+   "interval_months": 6,
+   "evidence": [
     {
-      "id": "fit_samsung_haf_cin_models",
-      "category": "fridge_water",
-      "part_id": "samsung_haf_cin",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "RF28K9070SR/AA",
-          "RF23J9011SR/AA",
-          "RF23J9011SG/AA",
-          "RF22M9581SR/AC",
-          "RF22M9581SG/AC",
-          "RF26J7500SR/AA",
-          "RF25HMEDBSR/AA",
-          "RF25HMEDBSG/AA",
-          "RF26HFPNBSR/AA",
-          "RF263BEAESR/AA",
-          "RF263BEAESG/AA",
-          "RF265BEAESR/AC",
-          "RF265BEAESG/AC",
-          "RH22H9010SR/AA",
-          "RF261BEAESR/AA",
-          "RF23HCEDBSR/A",
-          "RF23HCEDBSG/AA",
-          "RF28HFEDBSR/AA",
-          "RF28HFEDBSG/AA",
-          "RF23HTEDBSR/AA",
-          "RF28HDEDBSR/AA",
-          "RF28HMEDBSR/AA",
-          "RF28JBEDBSG/AA",
-          "RF22KREDBSG/AA",
-          "RF24FSEDBSR/AA",
-          "RF28NHEDBSR/AC",
-          "RF28NHEDBSG/AC",
-          "RF28K9580SR/AC"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.samsung.com/ca/home-appliance-accessories/refrigerators-filter-haf-cin-haf-cin-exp/"
-    },
-    {
-      "id": "fit_samsung_haf_qin_models",
-      "category": "fridge_water",
-      "part_id": "samsung_haf_qin",
-      "selector": {
-        "type": "prefix",
-        "values": [
-          "BRF365200",
-          "BRF425200",
-          "RF18A5101",
-          "RF20A5101",
-          "RF22R7351",
-          "RF22R7551",
-          "RF23A9071",
-          "RF23A9671",
-          "RF23A9675",
-          "RF23A9771",
-          "RF23BB8200",
-          "RF23BB8600",
-          "RF23BB8900",
-          "RF23DB9600",
-          "RF23DB9700",
-          "RF23DB9900",
-          "RF23M8070",
-          "RF23M8090",
-          "RF23M8570",
-          "RF23M8590",
-          "RF23M8960",
-          "RF23R6201",
-          "RF23R6301",
-          "RF24BB6200",
-          "RF24BB6600",
-          "RF24BB6900",
-          "RF24R7201",
-          "RF26CG7400",
-          "RF27CG5010",
-          "RF27CG5100",
-          "RF27CG5400",
-          "RF27CG5900",
-          "RF27T5201",
-          "RF27T5241",
-          "RF27T5501",
-          "RF28R6201",
-          "RF28R6202",
-          "RF28R6221",
-          "RF28R6222",
-          "RF28R6241",
-          "RF28R6301",
-          "RF28R7201",
-          "RF28R7351",
-          "RF28R7551",
-          "RF28T5001",
-          "RF28T5021",
-          "RF28T5101",
-          "RF28T5F01",
-          "RF29A9071",
-          "RF29A9671",
-          "RF29A9675",
-          "RF29A9771",
-          "RF29BB8200",
-          "RF29BB8600",
-          "RF29BB8900",
-          "RF29DB9600",
-          "RF29DB9700",
-          "RF29DB9900",
-          "RF30BB6200",
-          "RF30BB6600",
-          "RF30BB6602",
-          "RF30BB6900",
-          "RF31CG5100",
-          "RF31CG7200",
-          "RF31CG7400",
-          "RF32CG5400",
-          "RF32CG5900",
-          "RS22T5201",
-          "RS22T5561",
-          "RS23A500A",
-          "RS23CB7600",
-          "RS25H5111"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.samsung.com/us/business/builder/our-appliances/home-appliances-accessories/refrigerators/haf-qin-refrigerator-water-filter-2-pack-haf-qin-2p-exp/",
-      "note": "The manufacturer writes wildcard strings like 'BRF365200**'; we keep the prefix and drop the asterisks. The list is cut off with '...' on the page, so more entries may exist (marked partial)."
-    },
-    {
-      "id": "fit_lg_lt1000p_models",
-      "category": "fridge_water",
-      "part_id": "lg_lt1000p",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "LFCC23596",
-          "LFCS27596",
-          "LFD22716ST",
-          "LFD22786SD"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
-    },
-    {
-      "id": "fit_lg_lt700p_models",
-      "category": "fridge_water",
-      "part_id": "lg_lt700p",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "LFD20786",
-          "LFD22786"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
-    },
-    {
-      "id": "fit_lg_lt600p_models",
-      "category": "fridge_water",
-      "part_id": "lg_lt600p",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "LFD21860",
-          "LFD21870",
-          "LFD22860",
-          "LFD23860"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
-    },
-    {
-      "id": "fit_lg_lt1000p_au",
-      "category": "fridge_water",
-      "part_id": "lg_lt1000p",
-      "selector": {
-        "type": "prefix",
-        "values": [
-          "GF-V706",
-          "GF-V706B",
-          "GF-V570",
-          "GF-D706",
-          "GF-D708",
-          "GF-L570",
-          "GF-L677",
-          "GF-L706",
-          "GF-L708",
-          "GF-V708",
-          "GF-V910",
-          "SG-5I700"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
-      "note": "Prefix or series rule from the manufacturer page; confirm on the plate inside the door."
-    },
-    {
-      "id": "fit_ge_xwfe_prefix",
-      "category": "fridge_water",
-      "part_id": "ge_xwfe",
-      "selector": {
-        "type": "prefix",
-        "values": [
-          "GBE21",
-          "GDE21",
-          "GDE25",
-          "GFE24",
-          "GFE26",
-          "GNE21",
-          "GNE25",
-          "GNE27",
-          "GWE19",
-          "GYE18",
-          "QNE27",
-          "GSE25",
-          "GSS23",
-          "GSS25",
-          "GZS22",
-          "PSE25",
-          "CZS22"
-        ]
-      },
-      "grade": "rule",
-      "source_url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
-      "note": "A prefix match only says 'probably the same within this series', so the app must ask the user to confirm on the plate inside the door."
-    },
-    {
-      "id": "fit_aprilaire_35_models",
-      "category": "humidifier_panel",
-      "part_id": "aprilaire_35",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "300",
-          "350",
-          "360",
-          "560",
-          "560A",
-          "568",
-          "600",
-          "600A",
-          "600M",
-          "600MKZ",
-          "600KZ",
-          "700",
-          "700A",
-          "700M",
-          "700KZ",
-          "700MKZ",
-          "760",
-          "760A",
-          "768"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
-    },
-    {
-      "id": "fit_aprilaire_45_models",
-      "category": "humidifier_panel",
-      "part_id": "aprilaire_45",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "400",
-          "400A",
-          "400M"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
-    },
-    {
-      "id": "fit_aprilaire_10_models",
-      "category": "humidifier_panel",
-      "part_id": "aprilaire_10",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "110",
-          "220",
-          "500",
-          "500A",
-          "500M",
-          "550",
-          "550A",
-          "558"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
-    },
-    {
-      "id": "fit_levoit_core300_rf_models",
-      "category": "air_purifier",
-      "part_id": "levoit_core300_rf",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "Core 300-P",
-          "Core P350-P",
-          "Core 300-P-RAC",
-          "Core 300",
-          "Core 300S",
-          "Core P350",
-          "Core 300-RAC"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter",
-      "conflict": "Two pages from the same manufacturer write the model family differently, and neither page says whether the -P suffix means a packaging variant. Both wordings are shown as the manufacturer uses them."
-    },
-    {
-      "id": "fit_levoit_core300_sr_models",
-      "category": "air_purifier",
-      "part_id": "levoit_core300_rf_sr",
-      "selector": {
-        "type": "exact",
-        "values": [
-          "Core 300",
-          "Core 300S",
-          "Core P350"
-        ]
-      },
-      "grade": "explicit",
-      "source_url": "https://levoit.com/products/core-300-4-stage-smoke-remover-replacement-filter"
+     "publisher": "Samsung Australia (business)",
+     "url": "https://www.samsung.com/au/business/home-appliance-accessories/hafin2exp-hafin2-exp/",
+     "retrieved_at": "2026-11-21",
+     "grade": "part_only",
+     "quote": "For Use in System Model No. DA97-06317A; Replacement Cartridge Code DA29-00003G (replaces the older model DA29-00003B and is also compatible)"
     }
-  ],
-  "conflicts": [
+   ]
+  },
+  {
+   "id": "lg_lt1000p",
+   "category": "fridge_water",
+   "brand": "LG",
+   "part_no": "LT1000P",
+   "title": "LG LT1000P refrigerator water filter",
+   "spec": "6 month / 200 gal; part numbers ADQ74793501, AGF80300704/705, ADQ74793507, AGF80300703",
+   "interval_months": 6,
+   "evidence": [
     {
-      "id": "c_levoit_core300_naming",
-      "part_id": "levoit_core300_rf",
-      "description": "Levoit's own pages describe Core 300 compatibility differently: product page A lists Core 300-P / Core P350-P / Core 300-P-RAC, while product page B (Toxin Absorber) lists Core 300 / Core P350 / Core 300-RAC. Neither page explains whether the -P suffix is a packaging variant.",
-      "handling": "Both wordings are shown side by side with the page each came from. We never merge them into a single claim.",
-      "status": "unresolved_page_b_404"
+     "publisher": "LG Canada Support",
+     "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Model number table: LFCC23596 / LFCS27596 / LFD22716ST / LFD22786SD to LT1000P; LFD20786 / LFD22786 to LT700P; LFD21860 / 21870 / LFD22860 / LFD23860 to LT600P"
     },
     {
-      "id": "c_aprilaire_35_variants",
-      "part_id": "aprilaire_35",
-      "description": "The AprilAire site page lists 15 models; the official store page adds four variants (600MKZ, 600KZ, 700KZ, 700MKZ).",
-      "handling": "Union of both pages, with the source page recorded per row and kept in exports."
+     "publisher": "LG Australia",
+     "url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "LT1000P covers 31 models in the GF- and SG-series."
     },
     {
-      "id": "c_samsung_capacity_units",
-      "part_id": "samsung_haf_cin",
-      "description": "The Canadian page states 6 months / 1200 L; the US page states 300 gallons (1200 L is about 317 gal, so the two are not an exact equivalent).",
-      "handling": "Spec text keeps the manufacturer's original unit and wording instead of converting to a single number."
+     "publisher": "LG US business spec sheet (LF24Z6530S)",
+     "url": "https://www.lg.com/us/business/download/resources/CT00021979/LF24Z6530S_LG_Pro_Builder_Spec_Sheet[20240821_225459].pdf",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "ACCESSORIES: Replacement Water Filter LT1000P / Fresh Air Filter LT120F"
+    },
+    {
+     "publisher": "LG Mexico (LT1000P AGF80300704 product page)",
+     "url": "https://www.lg.com/mx/accesorios-filtros-refrigeradores/agf80300704/buy/",
+     "retrieved_at": "2026-11-24",
+     "grade": "explicit",
+     "quote": "Productos Compatibles: GM22SGPK-GM28LIP-GM28XID-GM29BIP-GM84SXD-GM88SXM-GS65SDPK-GS73SXS-LB26BGS-LM22SGPK-LM56SPP-LM57SXT-LM65SCS-LM65SDS-LM65SGS-LM75BXT-LM75SGS-LM75SXT-LM80SGD-LM80SXS-LM85SXD-LM87SXD-LM89SXD-LS65SDP1-LS65SDT1-LS65SXP-LS74SDP-LS74SDT-LS74SGP-LS74SXP-VS22JDP-VS22JS-VS22XCT-VS27JP-VS27JS-VS27JT-VS27LIP-VS27XCS"
     }
-  ]
+   ]
+  },
+  {
+   "id": "lg_lt700p",
+   "category": "fridge_water",
+   "brand": "LG",
+   "part_no": "LT700P",
+   "title": "LG LT700P refrigerator water filter",
+   "spec": "Twist-on cartridge",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "LG Canada Support",
+     "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "In the same model table the LT700P column is marked for LFD20786 and LFD22786."
+    }
+   ]
+  },
+  {
+   "id": "lg_lt600p",
+   "category": "fridge_water",
+   "brand": "LG",
+   "part_no": "LT600P",
+   "title": "LG LT600P refrigerator water filter",
+   "spec": "Twist-on cartridge",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "LG Canada Support",
+     "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "In the same model table the LT600P column is marked for LFD21860, LFD21870, LFD22860 and LFD23860."
+    }
+   ]
+  },
+  {
+   "id": "ge_xwfe",
+   "category": "fridge_water",
+   "brand": "GE Appliances",
+   "part_no": "XWFE",
+   "title": "GE XWFE refrigerator water filter",
+   "spec": "6 in H x 2.25 in W x 2 in D; 170 gal; RFID leak sensing",
+   "interval_months": 6,
+   "supersedes": [
+    "XWF"
+   ],
+   "evidence": [
+    {
+     "publisher": "GE Appliances Support",
+     "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
+     "retrieved_at": "2026-11-21",
+     "grade": "rule",
+     "quote": "The XWFE replacement section says it fits models beginning with GBE21, GDE21, GDE25, GFE24, GFE26, GNE21, GNE25, GNE27, GWE19, GYE18, QNE27, GSE25, GSS23, GSS25, GZS22, PSE25 and CZS22 (17 prefixes)."
+    },
+    {
+     "publisher": "GE Appliances Support",
+     "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=000060638",
+     "retrieved_at": "2026-11-21",
+     "grade": "rule",
+     "quote": "XWFE is backward compatible with XWF; XWF cannot be used in the newer XWFE machines, which read the filter with the panel."
+    }
+   ]
+  },
+  {
+   "id": "ge_gswf",
+   "category": "fridge_water",
+   "brand": "GE Appliances",
+   "part_no": "GSWF",
+   "title": "GE GSWF refrigerator water filter",
+   "spec": "Top-freezer / bottom-freezer cartridge",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "GE Appliances Support",
+     "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
+     "retrieved_at": "2026-11-21",
+     "grade": "part_only",
+     "quote": "The page points GSWF to a top-and-bottom-freezer replacement video but lists no specific models."
+    }
+   ]
+  },
+  {
+   "id": "whirlpool_edr1rxd1",
+   "category": "fridge_water",
+   "brand": "Whirlpool (everydrop)",
+   "part_no": "EDR1RXD1",
+   "title": "everydrop Filter 1 (Purple)",
+   "spec": "Push-in; NSF 42/53/401",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR1RXD1.html",
+     "retrieved_at": "2026-11-21",
+     "grade": "part_only",
+     "quote": "Fits with brand: Amana, JennAir, Kenmore, KitchenAid, Maytag, Whirlpool — brand and appliance type only, no specific model numbers."
+    },
+    {
+     "publisher": "Whirlpool (Performance Data Sheet W11392626)",
+     "url": "https://www.whirlpool.com/content/dam/global/documents/202209/F1_EDR_PDS_W11392626A.pdf",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Replacement Filter EDR1RXD1, EDR1RXD1B,WHR1RXD1, and KAD1RXD1"
+    },
+    {
+     "publisher": "Whirlpool (Performance Data Sheet W11392626)",
+     "url": "https://www.whirlpool.com/content/dam/global/documents/202209/F1_EDR_PDS_W11392626A.pdf",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "The disposable cartridge must be changed at least every 6 months. Use replacement filter part #EDR1RXD1/EDR1RXD1B."
+    }
+   ],
+   "aliases": [
+    "EDR1RXD1B",
+    "KAD1RXD1",
+    "WHR1RXD1"
+   ]
+  },
+  {
+   "id": "aprilaire_35",
+   "category": "humidifier_panel",
+   "brand": "AprilAire",
+   "part_no": "35",
+   "title": "AprilAire Water Panel 35",
+   "spec": "13 x 10 x 2 in",
+   "interval_months": 12,
+   "evidence": [
+    {
+     "publisher": "AprilAire",
+     "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Water Panel 35 | Filter size 13\" x 10\" x 2\" | Humidifier models: 300, 350, 360, 560, 560A, 568, 600, 600A, 600M, 700, 700A, 700M, 760, 760A, 768 | Replace once per heating season"
+    },
+    {
+     "publisher": "AprilAire Shop",
+     "url": "https://shop.aprilaire.com/products/aprilaire-water-panel-35/1000",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Compatible Models also includes 600MKZ, 600KZ, 700KZ and 700MKZ — four variants more than the site list."
+    }
+   ]
+  },
+  {
+   "id": "aprilaire_45",
+   "category": "humidifier_panel",
+   "brand": "AprilAire",
+   "part_no": "45",
+   "title": "AprilAire Water Panel 45",
+   "spec": "13 x 10 x 2 in",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "AprilAire",
+     "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Water Panel 45 | 13\" x 10\" x 2\" | Models: 400, 400A, 400M | Replace twice per heating season"
+    }
+   ]
+  },
+  {
+   "id": "aprilaire_10",
+   "category": "humidifier_panel",
+   "brand": "AprilAire",
+   "part_no": "10",
+   "title": "AprilAire Water Panel 10",
+   "spec": "10 x 10 x 2 in",
+   "interval_months": 12,
+   "evidence": [
+    {
+     "publisher": "AprilAire",
+     "url": "https://www.aprilaire.com/aprilaire-and-home-depot",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Water Panel 10 | 10\" x 10\" x 2\" | Models: 110, 220, 500, 500A, 500M, 550, 550A, 558 | Replace once per heating season"
+    },
+    {
+     "publisher": "AprilAire owner's manual (PDF, via Home Depot CDN)",
+     "url": "https://images.thdstatic.com/catalog/pdfImages/04/0486fc34-1e73-4bad-8aa0-b3972a4ac52f.pdf",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Water Panel table in the manual: 300 to 35, 400 to 45, 500 to 10, 600 to 35, 700 to 35."
+    }
+   ]
+  },
+  {
+   "id": "levoit_core300_rf",
+   "category": "air_purifier",
+   "brand": "Levoit",
+   "part_no": "Core 300-P-RF",
+   "title": "Levoit Core 300 series original 3-stage filter",
+   "spec": "3-stage (pre / HEPA / carbon); 6-8 months",
+   "interval_months": 8,
+   "evidence": [
+    {
+     "publisher": "Levoit (product page A)",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Compatible with only: Core 300-P, Core P350-P, Core 300-P-RAC"
+    },
+    {
+     "publisher": "Levoit (product page B, Toxin Absorber)",
+     "url": "https://levoit.com/products/core300-air-purifier-replacement-filter-toxin-absorber",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Compatible with only: Core 300, Core P350, Core 300-RAC (this page returned 404 when re-checked on 2026-11-21, so the conclusion is downgraded to pending review).",
+     "check_status": 404
+    }
+   ]
+  },
+  {
+   "id": "levoit_core300_rf_sr",
+   "category": "air_purifier",
+   "brand": "Levoit",
+   "part_no": "Core 300-RF-SR",
+   "title": "Levoit Core 300 4-stage smoke remover filter",
+   "spec": "4-stage with ARC carbon",
+   "interval_months": 8,
+   "evidence": [
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core-300-4-stage-smoke-remover-replacement-filter",
+     "retrieved_at": "2026-11-21",
+     "grade": "explicit",
+     "quote": "Compatible with only: Core 300, Core 300S, Core P350"
+    }
+   ]
+  },
+  {
+   "id": "frigidaire_wf3cb",
+   "category": "fridge_water",
+   "brand": "Frigidaire",
+   "part_no": "WF3CB",
+   "title": "Frigidaire PureSource 3 refrigerator water filter (WF3CB)",
+   "spec": "200 gal / 6 months; push-to-lock; back top-right filter location; NSF 42/53/401; also sold as 242069601, 242069603, 242086203, 242294501, P242069601, RENEWWF3CB, SWF3CB",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "Frigidaire (PureSource 3 WF3CB product page)",
+     "url": "https://www.frigidaire.com/en/p/accessories/refrigerator-accessories/refrigerator-accessories-and-consumables/water-filters/WF3CB",
+     "retrieved_at": "2026-11-22",
+     "grade": "part_only",
+     "quote": "Alternate Part Number 242069601; 242069603; 242086203; 242294501; P242069601; RENEWWF3CB; SWF3CB. Rated Capacity 200 Gallons. Recommended Change Frequency 3 - 6 Months. Filter Location Back Top-right. Installation Action Push to lock."
+    }
+   ]
+  },
+  {
+   "id": "ge_rpwfe",
+   "category": "fridge_water",
+   "brand": "GE",
+   "part_no": "RPWFE",
+   "title": "GE RPWFE RFID refrigerator water filter",
+   "spec": "Cartridge with RFID chip (leak detection); 2017 redesign is backwards compatible with RPWF; non-genuine or chipped filters make the dispenser stop and the display read \"Leak Detected\"",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "GE Appliances support (RPWFE operation and troubleshooting)",
+     "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=19693",
+     "retrieved_at": "2026-11-22",
+     "grade": "part_only",
+     "quote": "The RPWFE filter transitioned to a new design at the beginning of 2017; however, it is backwards compatible. The ID chip on the filter housing detects when a wrong or non-genuine GE Appliances part is used. If this happens, the dispenser will not work and the display may read \"Leak Detected\"."
+    }
+   ]
+  },
+  {
+   "id": "samsung_hafcu1",
+   "category": "fridge_water",
+   "brand": "Samsung",
+   "part_no": "HAF-CU1",
+   "title": "Samsung HAFCU1 compact refrigerator water filter",
+   "spec": "Compact wide cartridge for select Samsung models; replace when the refrigerator's filter indicator turns red",
+   "interval_months": null,
+   "evidence": [
+    {
+     "publisher": "Samsung US (Water Filter Finder)",
+     "url": "https://www.samsung.com/us/home-appliances/refrigerators/water-filters/find-your-water-filter/",
+     "retrieved_at": "2026-11-22",
+     "grade": "rule",
+     "quote": "Check your refrigerator or existing filter to determine if you need HAF-CIN, HAF-QIN, or HAFCU1. HAF-CUI Filter: RH25H5611**"
+    }
+   ]
+  },
+  {
+   "id": "lg_fss002",
+   "category": "fridge_water",
+   "brand": "LG",
+   "part_no": "FSS-002",
+   "title": "LG FSS-002 refrigerator water filter",
+   "spec": "LG genuine cartridge listed for GS-/GR-series refrigerators (AU listing)",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "LG Australia (fridge filters page)",
+     "url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+     "retrieved_at": "2026-11-22",
+     "grade": "explicit",
+     "quote": "Water filter - FSS-002 Fridge models: GS-V600MBLC, GS-D600MBLC, ... GS-L635PLF"
+    }
+   ]
+  },
+  {
+   "id": "lg_lt800p",
+   "category": "fridge_water",
+   "brand": "LG",
+   "part_no": "LT800P",
+   "title": "LG LT800P refrigerator water filter",
+   "spec": "LG genuine cartridge listed for GF-5D/GF-AD series refrigerators (AU listing)",
+   "interval_months": 6,
+   "evidence": [
+    {
+     "publisher": "LG Australia (fridge filters page)",
+     "url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+     "retrieved_at": "2026-11-22",
+     "grade": "explicit",
+     "quote": "Water filter - LT800P Fridge models: GF-5D712BSL, GF-5D712SL, GF-5D906SL, GF-5L712PL, GF-AD701BSL, GF-AD701SL, GF-AD910SL"
+    }
+   ]
+  },
+  {
+   "id": "lg_lt500p",
+   "category": "fridge_water",
+   "brand": "LG",
+   "part_no": "LT500P",
+   "title": "LG LT500P refrigerator water filter",
+   "spec": "Genuine LG cartridge, the LT500P type (the page writes it as LT500P/9890); 6-month replacement cadence",
+   "interval_months": 6,
+   "aliases": [
+    "9890"
+   ],
+   "evidence": [
+    {
+     "publisher": "LG (water filter replacement & instructions, model chart)",
+     "url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT20098040-20151238808711/",
+     "retrieved_at": "2026-11-24",
+     "grade": "explicit",
+     "quote": "There are five (5) different types of water filter cartridges … LT500/9890, LT600/9990, LT700/9690, LT800/9490, LT1000/9980"
+    }
+   ]
+  },
+  {
+   "id": "whirlpool_edr2rxd1",
+   "category": "fridge_water",
+   "brand": "Whirlpool (everydrop)",
+   "part_no": "EDR2RXD1",
+   "title": "everydrop Filter 2 (Orange)",
+   "spec": "NSF 42/53/401; certified to reduce 70 contaminants incl. microplastics",
+   "interval_months": 6,
+   "aliases": [
+    "WHR2RXD1"
+   ],
+   "evidence": [
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR2RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "everydrop® Refrigerator Ice & Water Filter 2 - Orange 1 Pack EDR2RXD1"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR2RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Certified* to reduce 70 potentially harmful contaminants like microplastics, heavy metals and volatile organic compounds (VOCs)."
+    }
+   ]
+  },
+  {
+   "id": "whirlpool_edr3rxd1",
+   "category": "fridge_water",
+   "brand": "Whirlpool (everydrop)",
+   "part_no": "EDR3RXD1",
+   "title": "everydrop Filter 3 (Light blue)",
+   "spec": "Replaces P1WB2 & P1WB2L; 6 months or 200 gallons",
+   "interval_months": 6,
+   "aliases": [
+    "EDR3RXV2P",
+    "P1WB2",
+    "P1WB2L",
+    "WHR3RXD1"
+   ],
+   "evidence": [
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR3RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "everydrop® Ice & Water Refrigerator Filter 3 replaces P1WB2 & P1WB2L"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR3RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "For the cleanest water, replace your everydrop® filter every 6 months (or 200 gallons)."
+    }
+   ]
+  },
+  {
+   "id": "whirlpool_edr4rxd1",
+   "category": "fridge_water",
+   "brand": "Whirlpool (everydrop)",
+   "part_no": "EDR4RXD1",
+   "title": "everydrop Filter 4 (Green)",
+   "spec": "NSF 42/53/401; certified to reduce 32 contaminants incl. microplastics",
+   "interval_months": 6,
+   "aliases": [
+    "WHR4RXD1"
+   ],
+   "evidence": [
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR4RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "everydrop® Refrigerator Ice & Water Filter 4 - Green 1 Pack EDR4RXD1"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR4RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Certified* to reduce 32 potentially harmful contaminants like microplastics, heavy metals and pesticides."
+    }
+   ]
+  },
+  {
+   "id": "ge_mwf",
+   "category": "fridge_water",
+   "brand": "GE Appliances",
+   "part_no": "MWFP",
+   "title": "GE MWF / MWFP SmartWater filter",
+   "spec": "SmartWater; MWF replaced by MWFP; up to 6 months or 300 gallons",
+   "interval_months": 6,
+   "aliases": [
+    "MWF",
+    "MWFA",
+    "GWF",
+    "HWF"
+   ],
+   "evidence": [
+    {
+     "publisher": "GE Appliances (support article 16933)",
+     "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=16933",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "The MWF filter has been replaced by the MWFP, which is the improved, replacement version of MWF."
+    },
+    {
+     "publisher": "GE Appliances (support article 16933)",
+     "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=16933",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "SmartWater filters can be used up to 6 months or 300 gallons."
+    }
+   ]
+  },
+  {
+   "id": "ge_mswf",
+   "category": "fridge_water",
+   "brand": "GE Appliances",
+   "part_no": "MSWF",
+   "title": "GE MSWF cylindrical SmartWater filter",
+   "spec": "Cylindrical SmartWater; not interchangeable with MWF/GWF or GSWF",
+   "interval_months": 6,
+   "aliases": [],
+   "evidence": [
+    {
+     "publisher": "GE Appliances (support article 16933)",
+     "url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=16933",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Some model refrigerators (Top Freezers with Internal Water Dispensers and Bottom Freezers) have a cylindrical style SmartWater filter, GSWF or MSWF. This filter is not interchangeable with the MWF/GWF filter. The GSWF & MSWF are not interchangeable."
+    }
+   ]
+  },
+  {
+   "id": "bosch_borplftr20",
+   "category": "fridge_water",
+   "brand": "Bosch",
+   "part_no": "BORPLFTR20",
+   "title": "Bosch UltraClarity water filter (BORPLFTR20)",
+   "spec": "Replacement for 00798470, 00642372, 00491746",
+   "interval_months": 6,
+   "aliases": [
+    "12004484",
+    "00798470",
+    "00642372",
+    "00491746"
+   ],
+   "evidence": [
+    {
+     "publisher": "Bosch Home Appliances US",
+     "url": "https://www.bosch-home.com/us/en/product/cleaning-and-care/water-filters/12004484",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "12004484 • BORPLFTR20"
+    },
+    {
+     "publisher": "Bosch Home Appliances US",
+     "url": "https://www.bosch-home.com/us/en/product/cleaning-and-care/water-filters/12004484",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Replacement for 00798470, 00642372, 00491746"
+    }
+   ]
+  },
+  {
+   "id": "bosch_borplftr50",
+   "category": "fridge_water",
+   "brand": "Bosch",
+   "part_no": "BORPLFTR55",
+   "title": "Bosch UltraClarity Pro water filter (BORPLFTR50/BORPLFTR55)",
+   "spec": "Replacement for 17005582, 12036454, 12028325, 11025825",
+   "interval_months": 6,
+   "aliases": [
+    "BORPLFTR50",
+    "RA450022",
+    "REPLFLTR55",
+    "11032531",
+    "17005582",
+    "12036454",
+    "12028325",
+    "11025825"
+   ],
+   "evidence": [
+    {
+     "publisher": "Bosch Home Appliances US",
+     "url": "https://www.bosch-home.com/us/en/product/cleaning-and-care/water-filters/11032531",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "11032531 • BORPLFTR55"
+    },
+    {
+     "publisher": "Bosch Home Appliances US",
+     "url": "https://www.bosch-home.com/us/en/product/cleaning-and-care/water-filters/11032531",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Replacement for 17005582, 12036454, 12028325, 11025825"
+    }
+   ]
+  },
+  {
+   "id": "bosch_borplftr10",
+   "category": "fridge_water",
+   "brand": "Bosch",
+   "part_no": "BORPLFTR10",
+   "title": "Bosch UltraClarity water filter (BORPLFTR10/BORPLFTR30)",
+   "spec": "Reduces chlorine taste and odors; UltraClarity family",
+   "interval_months": 6,
+   "aliases": [
+    "BORPLFTR30",
+    "RA450010",
+    "RA450021",
+    "REPLFLTR10",
+    "REPLFLTR30"
+   ],
+   "evidence": [
+    {
+     "publisher": "Bosch Home Appliances US",
+     "url": "https://www.bosch-home.com/us/shop-productlist/cleaning-and-care/water-filters/",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "UltraClarity Water Filter BORPLFTR10, BORPLFTR30, RA450010, RA450021, REPLFLTR10, REPLFLTR30"
+    }
+   ]
+  },
+  {
+   "id": "coway_max2_230_240",
+   "category": "air_purifier",
+   "brand": "Coway",
+   "part_no": "Airmega 230/240 Max2 Filter",
+   "title": "Coway Airmega 230 & 240 Max2 filter",
+   "spec": "Max2 all-in-one: HEPA + activated carbon; one filter per pack; 12-month life",
+   "interval_months": 12,
+   "aliases": [
+    "Max2 230/240",
+    "Airmega 230 Max2",
+    "Airmega 240 Max2"
+   ],
+   "evidence": [
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-230-240-max2-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Please note: The filter contains one Max2 filter for your Airmega 230 or 240."
+    },
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-230-240-max2-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Max2 Filter Set(HEPA filter & activated carbon filter) Filter Life Expectancy is 12 Months"
+    }
+   ]
+  },
+  {
+   "id": "coway_max2_250",
+   "category": "air_purifier",
+   "brand": "Coway",
+   "part_no": "Airmega 250 Max2 Filter",
+   "title": "Coway Airmega 250 / 250S / 250ART Max2 filter",
+   "spec": "Max2 all-in-one: HEPA + activated carbon; 12-month life; purifies 1,860 ft² in 60 min",
+   "interval_months": 12,
+   "aliases": [
+    "Max2 250",
+    "Airmega 250S Max2",
+    "Airmega 250ART Max2"
+   ],
+   "evidence": [
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-250-max2-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Airmega 250•250S•250ART Max2 Filter"
+    },
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-250-max2-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Max2 Filter Set(HEPA filter & activated carbon filter) Filter Life Expectancy: Max2 Filter (1 year)"
+    }
+   ]
+  },
+  {
+   "id": "coway_max2_300",
+   "category": "air_purifier",
+   "brand": "Coway",
+   "part_no": "Airmega 300 Max2 Filter Set",
+   "title": "Coway Airmega 300 / 300S Max2 filter set",
+   "spec": "Two Max2 filters per set (one per side); 12-month life; purifies 2,512 ft² in 60 min",
+   "interval_months": 12,
+   "aliases": [
+    "Max2 300",
+    "Airmega 300S Max2",
+    "3104757"
+   ],
+   "evidence": [
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-300-max2-filter-set",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Airmega 300•300S Max2 Filter Set"
+    },
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-300-max2-filter-set",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Please note: Each filter set contains two Max2 filters, one for each side of your Coway Airmega."
+    },
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-300-max2-filter-set",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "SKU: 3104757"
+    }
+   ]
+  },
+  {
+   "id": "coway_max2_400",
+   "category": "air_purifier",
+   "brand": "Coway",
+   "part_no": "Airmega 400 Max2 Filter Set",
+   "title": "Coway Airmega 400 / 400S Max2 filter set",
+   "spec": "Two Max2 filters per set; 12-month life; purifies 3,120 ft² in 60 min",
+   "interval_months": 12,
+   "aliases": [
+    "Max2 400",
+    "Airmega 400S Max2"
+   ],
+   "evidence": [
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-400-max2-filter-set",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Airmega 400•400S Max2 Filter Set"
+    },
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-400-max2-filter-set",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Compatible with Airmega 400 and 400S"
+    }
+   ]
+  },
+  {
+   "id": "coway_max2_icon",
+   "category": "air_purifier",
+   "brand": "Coway",
+   "part_no": "Airmega Icon Max2 Filter",
+   "title": "Coway Airmega Icon / IconS Max2 filter",
+   "spec": "One Max2 filter per pack; 12-month life; purifies 1,298 ft² in 60 min",
+   "interval_months": 12,
+   "aliases": [
+    "Max2 Icon",
+    "Airmega IconS Max2"
+   ],
+   "evidence": [
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-icon-max2-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Airmega Icon•IconS Max2 Filter"
+    },
+    {
+     "publisher": "Coway (cowaymega.com)",
+     "url": "https://cowaymega.com/products/airmega-icon-max2-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Please note: The filter contains one Max2 filter of your Airmega Icon/IconS."
+    }
+   ]
+  },
+  {
+   "id": "levoit_core300p_pet",
+   "category": "air_purifier",
+   "brand": "Levoit",
+   "part_no": "Core 300-P Pet Allergy Filter",
+   "title": "Levoit Core 300-P Pet Allergy filter",
+   "spec": "3-stage with ARC Formula pet formulation; replace every 6–8 months",
+   "interval_months": 7,
+   "aliases": [
+    "817915026892",
+    "Core 300-P Pet Allergy"
+   ],
+   "evidence": [
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-pet-allergy",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Levoit Core® 300-P Pet Allergy Filter for Homes with Pets"
+    },
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-pet-allergy",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Customized with Levoit’s exclusive ARC Formula™, the pet allergy filter is perfect for adsorbing pet odors and alleviating allergies."
+    },
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-pet-allergy",
+     "retrieved_at": "2026-11-24",
+     "grade": "explicit",
+     "quote": "Compatible with only: Core 300-P, Core P350-P, Core 300-P-RAC"
+    },
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-pet-allergy",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Replace every 6–8 months"
+    }
+   ]
+  },
+  {
+   "id": "levoit_core300p_toxin",
+   "category": "air_purifier",
+   "brand": "Levoit",
+   "part_no": "Core 300-P Toxin Absorber Filter",
+   "title": "Levoit Core 300-P Toxin Absorber filter",
+   "spec": "3-stage with ARC Formula toxin formulation; replace every 6–8 months",
+   "interval_months": 7,
+   "aliases": [
+    "817915026908",
+    "Core 300-P Toxin Absorber"
+   ],
+   "evidence": [
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-toxin-absorber",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Levoit Core® 300-P Air Purifier 3-Stage Toxin Absorber Filter"
+    },
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-toxin-absorber",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Customized with Levoit’s exclusive ARC Formula™, the toxin absorber filter is perfect for areas with high levels of smoke, smog, and Volatile Organic Compounds (VOCs)."
+    },
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-toxin-absorber",
+     "retrieved_at": "2026-11-24",
+     "grade": "explicit",
+     "quote": "Compatible with only: Core 300-P, Core P350-P, Core 300-P-RAC"
+    },
+    {
+     "publisher": "Levoit",
+     "url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-toxin-absorber",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Replace every 6–8 months"
+    }
+   ]
+  },
+  {
+   "id": "whirlpool_edrarxd1",
+   "category": "fridge_water",
+   "brand": "Whirlpool (everydrop)",
+   "part_no": "EDRARXD1",
+   "title": "everydrop Filter A (Blue)",
+   "spec": "NSF 42/53/401; reduces 75 contaminants incl. 99% microplastics; Twist-in",
+   "interval_months": 6,
+   "aliases": [
+    "EDRARXD1A",
+    "Filter A"
+   ],
+   "evidence": [
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDRARXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "everydrop® Refrigerator Ice & Water Filter A - Blue 1 Pack EDRARXD1"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDRARXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Certified* to reduce 75 potentially harmful contaminants like microplastics, heavy metals and volatile organic compounds (VOCs)"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDRARXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Fits with brand KitchenAid, Maytag, Whirlpool"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDRARXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Changing your water filter is a quick process that should be done once every six months."
+    }
+   ]
+  },
+  {
+   "id": "whirlpool_edr5rxd1",
+   "category": "fridge_water",
+   "brand": "Whirlpool (everydrop)",
+   "part_no": "EDR5RXD1",
+   "title": "everydrop Filter 5 (Pink)",
+   "spec": "NSF 42/53/401; reduces 28 contaminants; micron rating 0.5 to <1.0; Twist-in",
+   "interval_months": 6,
+   "aliases": [
+    "WHR5RXD1"
+   ],
+   "evidence": [
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR5RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "everydrop® Refrigerator Ice & Water Filter 5 - Pink 1 Pack EDR5RXD1"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR5RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Certified* to reduce 28 potentially harmful contaminants like microplastics, heavy metals and pesticides"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR5RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Fits with brand Amana, JennAir, Kenmore, KitchenAid, Maytag, Whirlpool"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR5RXD1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Fits with refrigerator type Bottom mount, French door, Side by side"
+    }
+   ]
+  },
+  {
+   "id": "whirlpool_edr6d1",
+   "category": "fridge_water",
+   "brand": "Whirlpool (everydrop)",
+   "part_no": "EDR6D1",
+   "title": "everydrop Filter 6 (Navy)",
+   "spec": "NSF 42/53/401; reduces 10 contaminants; micron rating 0.5 to <1.0; Twist-in",
+   "interval_months": 6,
+   "aliases": [
+    "WHR6D1"
+   ],
+   "evidence": [
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR6D1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "everydrop® Refrigerator Ice & Water Filter 6 - Navy 1 Pack EDR6D1"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR6D1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Certified* to reduce 10 potentially harmful contaminants like microplastics, heavy metals and pesticides"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR6D1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Fits with brand Amana, JennAir, Kenmore, KitchenAid, Maytag, Whirlpool"
+    },
+    {
+     "publisher": "Whirlpool",
+     "url": "https://www.whirlpool.com/accessories/kitchen-accessories/refrigerator/p.EDR6D1.html",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Fits with refrigerator type Bottom mount, Top mount"
+    }
+   ]
+  },
+  {
+   "id": "blueair_bp511_pac",
+   "category": "air_purifier",
+   "brand": "Blueair",
+   "part_no": "Blue Pure 511 Particle + Carbon Filter",
+   "title": "Blueair Blue Pure 511 Particle + Carbon filter",
+   "spec": "Particle + carbon combined filter; replace about every 6 months",
+   "interval_months": 6,
+   "aliases": [
+    "Blue Pure 511 Filter"
+   ],
+   "evidence": [
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/replacement-filter-for-blue-pure-511",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Blue Pure 511 Particle + Carbon Filter"
+    },
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/replacement-filter-for-blue-pure-511",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Simple upkeep, every six months A filter replacement indicator lets you know when it’s time for a fresh filter, typically after about six months of use."
+    }
+   ]
+  },
+  {
+   "id": "blueair_bp_mini_max_pac",
+   "category": "air_purifier",
+   "brand": "Blueair",
+   "part_no": "Blue Pure Mini Max Filter",
+   "title": "Blueair Blue Pure Mini Max Particle + Carbon filter",
+   "spec": "Particle + carbon combined filter for Blue Pure Mini Max",
+   "interval_months": 6,
+   "aliases": [
+    "Blue Pure Mini Max Replacement Filter"
+   ],
+   "evidence": [
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/replacement-filter-for-blue-pure-mini-max",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Blue Pure Mini Max Particle + Carbon Filter"
+    },
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/replacement-filter-for-blue-pure-mini-max",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Blue Pure Mini Max Replacement Filter | Official Blueair Filter"
+    }
+   ]
+  },
+  {
+   "id": "blueair_bp311_pac",
+   "category": "air_purifier",
+   "brand": "Blueair",
+   "part_no": "Blue Pure 311 Particle + Carbon Filter",
+   "title": "Blueair Blue Pure 311 Particle + Carbon filter",
+   "spec": "Particle + carbon combined filter; replace about every 6 months",
+   "interval_months": 6,
+   "aliases": [
+    "Blue Pure 311 Combination Filters"
+   ],
+   "evidence": [
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/blue-pure-311-particle-carbon-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Blue Pure 311 Particle + Carbon Filter"
+    },
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/blue-pure-311-particle-carbon-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Simple upkeep, every six months A filter replacement indicator lets you know when it’s time for a fresh filter, typically after about six months of use."
+    }
+   ]
+  },
+  {
+   "id": "blueair_bp211_smokeblock",
+   "category": "air_purifier",
+   "brand": "Blueair",
+   "part_no": "Blue Pure 211+ Series SmokeBlock Filter",
+   "title": "Blueair Blue Pure 211+ Series SmokeBlock filter",
+   "spec": "Smoke-focused variant for the Blue Pure 211+ series",
+   "interval_months": 6,
+   "aliases": [
+    "Blue Pure 211+ Series Filter"
+   ],
+   "evidence": [
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/blue-pure-211-series-smokeblock-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Blue Pure 211+ Series Smokeblock Filter"
+    },
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/blue-pure-211-series-smokeblock-filter",
+     "retrieved_at": "2026-11-24",
+     "grade": "part_only",
+     "quote": "Simple upkeep, every six months A filter replacement indicator lets you know when it’s time for a fresh filter, typically after about six months of use."
+    }
+   ]
+  },
+  {
+   "id": "blueair_f4max_pac",
+   "category": "air_purifier",
+   "brand": "Blueair",
+   "part_no": "F4MAX Particle + Carbon Filter",
+   "title": "Blueair F4MAX filter for Blue Pure 411i Max / 411i+ Max / 411a Max",
+   "spec": "Particle + carbon combined filter",
+   "interval_months": 6,
+   "aliases": [
+    "F4MAX",
+    "Blue Pure 411i Max,411i+ Max, 411a Max Filter"
+   ],
+   "evidence": [
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/f4max-replacement-pac-filter-for-411max-series-f4max",
+     "retrieved_at": "2026-11-24",
+     "grade": "explicit",
+     "quote": "Blue Pure 411i Max,411i+ Max, 411a Max Filter"
+    }
+   ]
+  },
+  {
+   "id": "blueair_f3max_pac",
+   "category": "air_purifier",
+   "brand": "Blueair",
+   "part_no": "F3MAX Particle + Carbon Filter",
+   "title": "Blueair F3MAX filter for Blue Pure 311i+ Max",
+   "spec": "Particle + carbon combined filter",
+   "interval_months": 6,
+   "aliases": [
+    "F3MAX",
+    "Blue Pure 311i+ Max Filter"
+   ],
+   "evidence": [
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/f3max-replacement-pac-filter-for-311i-max",
+     "retrieved_at": "2026-11-24",
+     "grade": "explicit",
+     "quote": "Blue Pure 311i+ Max Filter"
+    }
+   ]
+  },
+  {
+   "id": "blueair_f5max_allergenblock",
+   "category": "air_purifier",
+   "brand": "Blueair",
+   "part_no": "F5MAX AllergenBlock Filter",
+   "title": "Blueair F5MAX AllergenBlock filter for Blue Pure 511i Max",
+   "spec": "Allergen-focused variant for Blue Pure 511i Max",
+   "interval_months": 6,
+   "aliases": [
+    "F5MAX"
+   ],
+   "evidence": [
+    {
+     "publisher": "Blueair",
+     "url": "https://www.blueair.com/products/f5max-replacement-allergenblock-filter-for-511i-max",
+     "retrieved_at": "2026-11-24",
+     "grade": "explicit",
+     "quote": "F5MAX AllergenBlock Filter for 511i Max"
+    }
+   ]
+  }
+ ],
+ "fitments": [
+  {
+   "id": "fit_samsung_haf_cin_models",
+   "category": "fridge_water",
+   "part_id": "samsung_haf_cin",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "RF28K9070SR/AA",
+     "RF23J9011SR/AA",
+     "RF23J9011SG/AA",
+     "RF22M9581SR/AC",
+     "RF22M9581SG/AC",
+     "RF26J7500SR/AA",
+     "RF25HMEDBSR/AA",
+     "RF25HMEDBSG/AA",
+     "RF26HFPNBSR/AA",
+     "RF263BEAESR/AA",
+     "RF263BEAESG/AA",
+     "RF265BEAESR/AC",
+     "RF265BEAESG/AC",
+     "RH22H9010SR/AA",
+     "RF261BEAESR/AA",
+     "RF23HCEDBSR/A",
+     "RF23HCEDBSG/AA",
+     "RF28HFEDBSR/AA",
+     "RF28HFEDBSG/AA",
+     "RF23HTEDBSR/AA",
+     "RF28HDEDBSR/AA",
+     "RF28HMEDBSR/AA",
+     "RF28JBEDBSG/AA",
+     "RF22KREDBSG/AA",
+     "RF24FSEDBSR/AA",
+     "RF28NHEDBSR/AC",
+     "RF28NHEDBSG/AC",
+     "RF28K9580SR/AC"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.samsung.com/ca/home-appliance-accessories/refrigerators-filter-haf-cin-haf-cin-exp/"
+  },
+  {
+   "id": "fit_samsung_haf_qin_models",
+   "category": "fridge_water",
+   "part_id": "samsung_haf_qin",
+   "selector": {
+    "type": "prefix",
+    "values": [
+     "BRF365200",
+     "BRF425200",
+     "RF18A5101",
+     "RF20A5101",
+     "RF22R7351",
+     "RF22R7551",
+     "RF23A9071",
+     "RF23A9671",
+     "RF23A9675",
+     "RF23A9771",
+     "RF23BB8200",
+     "RF23BB8600",
+     "RF23BB8900",
+     "RF23DB9600",
+     "RF23DB9700",
+     "RF23DB9900",
+     "RF23M8070",
+     "RF23M8090",
+     "RF23M8570",
+     "RF23M8590",
+     "RF23M8960",
+     "RF23R6201",
+     "RF23R6301",
+     "RF24BB6200",
+     "RF24BB6600",
+     "RF24BB6900",
+     "RF24R7201",
+     "RF26CG7400",
+     "RF27CG5010",
+     "RF27CG5100",
+     "RF27CG5400",
+     "RF27CG5900",
+     "RF27T5201",
+     "RF27T5241",
+     "RF27T5501",
+     "RF28R6201",
+     "RF28R6202",
+     "RF28R6221",
+     "RF28R6222",
+     "RF28R6241",
+     "RF28R6301",
+     "RF28R7201",
+     "RF28R7351",
+     "RF28R7551",
+     "RF28T5001",
+     "RF28T5021",
+     "RF28T5101",
+     "RF28T5F01",
+     "RF29A9071",
+     "RF29A9671",
+     "RF29A9675",
+     "RF29A9771",
+     "RF29BB8200",
+     "RF29BB8600",
+     "RF29BB8900",
+     "RF29DB9600",
+     "RF29DB9700",
+     "RF29DB9900",
+     "RF30BB6200",
+     "RF30BB6600",
+     "RF30BB6602",
+     "RF30BB6900",
+     "RF31CG5100",
+     "RF31CG7200",
+     "RF31CG7400",
+     "RF32CG5400",
+     "RF32CG5900",
+     "RS22T5201",
+     "RS22T5561",
+     "RS23A500A",
+     "RS23CB7600",
+     "RS25H5111"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.samsung.com/us/business/builder/our-appliances/home-appliances-accessories/refrigerators/haf-qin-refrigerator-water-filter-2-pack-haf-qin-2p-exp/",
+   "note": "The manufacturer writes wildcard strings like 'BRF365200**'; we keep the prefix and drop the asterisks. The list is cut off with '...' on the page, so more entries may exist (marked partial)."
+  },
+  {
+   "id": "fit_lg_lt1000p_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt1000p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "LFCC23596",
+     "LFCS27596",
+     "LFD22716ST",
+     "LFD22786SD"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
+  },
+  {
+   "id": "fit_lg_lt700p_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt700p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "LFD20786",
+     "LFD22786"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
+  },
+  {
+   "id": "fit_lg_lt600p_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt600p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "LFD21860",
+     "LFD21870",
+     "LFD22860",
+     "LFD23860"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT52001644-20151239001479/"
+  },
+  {
+   "id": "fit_lg_lt1000p_au",
+   "category": "fridge_water",
+   "part_id": "lg_lt1000p",
+   "selector": {
+    "type": "prefix",
+    "values": [
+     "GF-V706",
+     "GF-V706B",
+     "GF-V570",
+     "GF-D706",
+     "GF-D708",
+     "GF-L570",
+     "GF-L677",
+     "GF-L706",
+     "GF-L708",
+     "GF-V708",
+     "GF-V910",
+     "SG-5I700"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+   "note": "Prefix or series rule from the manufacturer page; confirm on the plate inside the door."
+  },
+  {
+   "id": "fit_ge_xwfe_prefix",
+   "category": "fridge_water",
+   "part_id": "ge_xwfe",
+   "selector": {
+    "type": "prefix",
+    "values": [
+     "GBE21",
+     "GDE21",
+     "GDE25",
+     "GFE24",
+     "GFE26",
+     "GNE21",
+     "GNE25",
+     "GNE27",
+     "GWE19",
+     "GYE18",
+     "QNE27",
+     "GSE25",
+     "GSS23",
+     "GSS25",
+     "GZS22",
+     "PSE25",
+     "CZS22"
+    ]
+   },
+   "grade": "rule",
+   "source_url": "https://products.geappliances.com/appliance/gea-support-search-content?contentId=21284",
+   "note": "A prefix match only says 'probably the same within this series', so the app must ask the user to confirm on the plate inside the door."
+  },
+  {
+   "id": "fit_aprilaire_35_models",
+   "category": "humidifier_panel",
+   "part_id": "aprilaire_35",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "300",
+     "350",
+     "360",
+     "560",
+     "560A",
+     "568",
+     "600",
+     "600A",
+     "600M",
+     "600MKZ",
+     "600KZ",
+     "700",
+     "700A",
+     "700M",
+     "700KZ",
+     "700MKZ",
+     "760",
+     "760A",
+     "768"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
+  },
+  {
+   "id": "fit_aprilaire_45_models",
+   "category": "humidifier_panel",
+   "part_id": "aprilaire_45",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "400",
+     "400A",
+     "400M"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
+  },
+  {
+   "id": "fit_aprilaire_10_models",
+   "category": "humidifier_panel",
+   "part_id": "aprilaire_10",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "110",
+     "220",
+     "500",
+     "500A",
+     "500M",
+     "550",
+     "550A",
+     "558"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.aprilaire.com/aprilaire-and-home-depot"
+  },
+  {
+   "id": "fit_levoit_core300_rf_models",
+   "category": "air_purifier",
+   "part_id": "levoit_core300_rf",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "Core 300-P",
+     "Core P350-P",
+     "Core 300-P-RAC",
+     "Core 300",
+     "Core 300S",
+     "Core P350",
+     "Core 300-RAC"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter",
+   "conflict": "Two pages from the same manufacturer write the model family differently, and neither page says whether the -P suffix means a packaging variant. Both wordings are shown as the manufacturer uses them."
+  },
+  {
+   "id": "fit_levoit_core300_sr_models",
+   "category": "air_purifier",
+   "part_id": "levoit_core300_rf_sr",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "Core 300",
+     "Core 300S",
+     "Core P350"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://levoit.com/products/core-300-4-stage-smoke-remover-replacement-filter"
+  },
+  {
+   "id": "fit_samsung_haf_cin_us_prefix",
+   "category": "fridge_water",
+   "part_id": "samsung_haf_cin",
+   "selector": {
+    "type": "prefix",
+    "values": [
+     "RF220NCTA",
+     "RF22K9381",
+     "RF22KREDB",
+     "RF22N9781",
+     "RF22NPEDB",
+     "RF23HCEDB",
+     "RF23HTEDB",
+     "RF23J9011",
+     "RF25HMEDB",
+     "RF25HMIDB",
+     "RF260BEAE",
+     "RF261BEAE",
+     "RF262BEAE",
+     "RF263BEAE",
+     "RF263TEAE",
+     "RF265BEAE",
+     "RF26J7500",
+     "RF26J7510",
+     "RF28HDEDB",
+     "RF28HDEDP",
+     "RF28HFEDB",
+     "RF28HFEDT",
+     "RF28HMEDB",
+     "RF28JBEDB",
+     "RF28K9070",
+     "RF28K9380",
+     "RF28N9780",
+     "RF30KMEDB",
+     "RH22H9010",
+     "RQ48T9432",
+     "RS22HDHPN",
+     "RS25J500D"
+    ]
+   },
+   "grade": "rule",
+   "source_url": "https://www.samsung.com/us/home-appliances/refrigerators/water-filters/find-your-water-filter/",
+   "note": "Samsung US official filter finder lists these model prefixes for HAF-CIN; each entry ends with ** on the page."
+  },
+  {
+   "id": "fit_samsung_haf_qin_us_prefix",
+   "category": "fridge_water",
+   "part_id": "samsung_haf_qin",
+   "selector": {
+    "type": "prefix",
+    "values": [
+     "BRF365200",
+     "BRF425200",
+     "RF18A5101",
+     "RF20A5101",
+     "RF22R7351",
+     "RF22R7551",
+     "RF23A9071",
+     "RF23A9671",
+     "RF23A9675",
+     "RF23A9771",
+     "RF23BB8200",
+     "RF23BB8600",
+     "RF23BB8900",
+     "RF23DB9600",
+     "RF23DB9700",
+     "RF23DB9900",
+     "RF23M8070",
+     "RF23M8090",
+     "RF23M8570",
+     "RF23M8590",
+     "RF23M8960",
+     "RF23R6201",
+     "RF23R6301",
+     "RF24BB6200",
+     "RF24BB6600",
+     "RF24BB6900",
+     "RF24R7201",
+     "RF26CG7400",
+     "RF27CG5010",
+     "RF27CG5100",
+     "RF27CG5400",
+     "RF27CG5900",
+     "RF27T5201",
+     "RF27T5241",
+     "RF27T5501",
+     "RF28R6201",
+     "RF28R6202",
+     "RF28R6221",
+     "RF28R6222",
+     "RF28R6241",
+     "RF28R6301",
+     "RF28R7201",
+     "RF28R7351",
+     "RF28R7551",
+     "RF28T5001",
+     "RF28T5021",
+     "RF28T5101",
+     "RF28T5F01",
+     "RF29A9071",
+     "RF29A9671",
+     "RF29A9675",
+     "RF29A9771",
+     "RF29BB8200",
+     "RF29BB8600",
+     "RF29BB8900",
+     "RF29DB9600",
+     "RF29DB9700",
+     "RF29DB9900",
+     "RF30BB6200",
+     "RF30BB6600",
+     "RF30BB6602",
+     "RF30BB6900",
+     "RF31CG5100",
+     "RF31CG7200",
+     "RF31CG7400",
+     "RF32CG5400",
+     "RF32CG5900",
+     "RS22T5201",
+     "RS22T5561",
+     "RS23A500A",
+     "RS23CB7600",
+     "RS25H5111",
+     "RS27T5200",
+     "RS27T5201",
+     "RS27T5202",
+     "RS27T5561",
+     "RS28A500A",
+     "RS28A5F61",
+     "RS28CB7600",
+     "RF23DB9750",
+     "RF29DB9750",
+     "RF23B7671",
+     "RF90F23AE",
+     "RF90F29AE",
+     "RF90F29BE",
+     "RF90F23BE",
+     "RF90F23EE",
+     "RF90F29EE",
+     "RM80F23V",
+     "RM80F22W",
+     "RM70F22N",
+     "RF27CG5B10",
+     "RF32CG5B10",
+     "RF27CG5B30",
+     "RF32CG5B30",
+     "RF25C5551",
+     "RF32CG5300",
+     "RF22A4221",
+     "RF32CG5D00",
+     "RF25C5A01",
+     "RS70H27S"
+    ]
+   },
+   "grade": "rule",
+   "source_url": "https://www.samsung.com/us/home-appliances/refrigerators/water-filters/find-your-water-filter/",
+   "note": "Samsung US official filter finder lists these model prefixes for HAF-QIN; each entry ends with ** on the page. 6 entries with an internal wildcard (RF70F23*E* etc.) cannot be expressed as prefixes and were not written."
+  },
+  {
+   "id": "fit_samsung_hafcu1_us_prefix",
+   "category": "fridge_water",
+   "part_id": "samsung_hafcu1",
+   "selector": {
+    "type": "prefix",
+    "values": [
+     "RH25H5611"
+    ]
+   },
+   "grade": "rule",
+   "source_url": "https://www.samsung.com/us/home-appliances/refrigerators/water-filters/find-your-water-filter/",
+   "note": "Samsung US official filter finder lists a single model for the HAF-CU1 cartridge."
+  },
+  {
+   "id": "fit_lg_lt1000p_au_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt1000p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "GF-V900MBLC",
+     "GF-V700MBLC",
+     "GF-V700BSLC",
+     "GF-D700MBLC",
+     "GF-D700BSLC",
+     "GF-L700MBL",
+     "GF-L700PL",
+     "GF-L700MWH",
+     "GF-V500MBLC",
+     "GF-L500MBL",
+     "GF-L500PL",
+     "GF-L500MWH",
+     "GF-D706BSL",
+     "GF-D706MBL",
+     "GF-D708BSL",
+     "GF-D708MBSL",
+     "GF-L570MBL",
+     "GF-L570PL",
+     "GF-L677SL",
+     "GF-L706MBL",
+     "GF-L706PL",
+     "GF-L708PL",
+     "GF-V570MBL",
+     "GF-V706BSL",
+     "GF-V706MBL",
+     "GF-V708BSL",
+     "GF-V708MBSL",
+     "GF-V910MBL",
+     "GF-V910MBSL",
+     "SG-5I700TSL",
+     "GF-V706MBLC",
+     "GF-V706BSLC",
+     "GF-V570MBLC"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+   "note": "LG Australia lists these AU/NZ model codes for LT1000P."
+  },
+  {
+   "id": "fit_lg_fss002_au_models",
+   "category": "fridge_water",
+   "part_id": "lg_fss002",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "GS-V600MBLC",
+     "GS-D600MBLC",
+     "GS-D600PLC",
+     "GS-L600MBL",
+     "GS-L600PL",
+     "GR-D257SL",
+     "GS-D665BSL",
+     "GS-D665PL",
+     "GS-L668PL",
+     "GS-V665MBL",
+     "GS-V635MBLC",
+     "GS-V635PLC",
+     "GS-D635MBLC",
+     "GS-D635PLC",
+     "GS-L635MBL",
+     "GS-L635PL",
+     "GS-L635PLF"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+   "note": "LG Australia lists these model codes for FSS-002."
+  },
+  {
+   "id": "fit_lg_lt800p_au_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt800p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "GF-5D712BSL",
+     "GF-5D712SL",
+     "GF-5D906SL",
+     "GF-5L712PL",
+     "GF-AD701BSL",
+     "GF-AD701SL",
+     "GF-AD910SL"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+   "note": "LG Australia lists these model codes for LT800P."
+  },
+  {
+   "id": "fit_lg_lt700p_au_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt700p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "GF-SD730SL",
+     "GF-SL730SL",
+     "GR-D730SL",
+     "GR-D907SL",
+     "GR-L730SL"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/au/fridge-freezers/fridge-accessories/filters/",
+   "note": "LG Australia lists these model codes for LT700P; the page repeats GR-D907SL twice."
+  },
+  {
+   "id": "fit_samsung_hafin2_nz_models",
+   "category": "fridge_water",
+   "part_id": "samsung_hafin2",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "RS21KLSR",
+     "RS27JANS",
+     "RSE8JPAS",
+     "RSE8KPAS",
+     "RSE8KPUS",
+     "SRS585DTKGM",
+     "SRS585JDHSS",
+     "SRS596NP",
+     "SRS606DHLS",
+     "SRS611HDHSS",
+     "SRS617DW",
+     "SRS619DHSS",
+     "SRS620DW",
+     "SRS621DP",
+     "SRS622DSS",
+     "SRS676GDHLS",
+     "SRS683GDHB",
+     "SRS683GDHLS",
+     "SRS684GDHSS",
+     "SRS690GDLS",
+     "SRS691GDIS",
+     "SRS700DP",
+     "SRS700DSS",
+     "SRS702GDHSS",
+     "SRS733DW",
+     "SRS735DHSS",
+     "SRS757DW",
+     "SRS758DP",
+     "SRS768DSS",
+     "SRS769DHSS",
+     "SRS800DHAL",
+     "SRS800DHSS",
+     "SRF752DSS",
+     "RF26NBUS",
+     "SRF639GDSS",
+     "SRF639GDLS"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.samsung.com/nz/home-appliance-accessories/refrigerators-filter-hafin2-hafin2-exp/",
+   "note": "Samsung NZ 'Compatible models' list for HAFIN2; the page repeats SRF752DSS twice."
+  },
+  {
+   "id": "fit_lg_lt1000p_ca_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt1000p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "LFCC22426",
+     "LFCC23596",
+     "LFCS27596",
+     "LFD22716ST",
+     "LFD22786SD",
+     "LFXC22526",
+     "LFXC22596",
+     "LFXC24796",
+     "LFXS26566",
+     "LFXS26596",
+     "LFXS26973",
+     "LFXS27466",
+     "LFXS28566S",
+     "LFXS28596S",
+     "LFXS28968",
+     "LFXS28968D",
+     "LFXS30796",
+     "LMWC23626",
+     "LMWS27626",
+     "LMXC23796",
+     "LMXS28626",
+     "LMXS30796",
+     "LRFDS3006",
+     "LRFDS3016",
+     "LRFVC2406",
+     "LRFVS3006",
+     "LRFWS2200",
+     "LRFWS2906",
+     "LRFXC2406",
+     "LRFXC2496",
+     "LRFXS2503",
+     "LRMVC1803",
+     "LRMVC2306",
+     "LRMVS3006",
+     "LRMXC1803",
+     "LRMXC2206",
+     "LRMXS2806",
+     "LRSOS2706",
+     "LRSXS2706",
+     "LSXS26396",
+     "SRFVC2406",
+     "SRFVC2416"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT20098040-20151238808711/",
+   "note": "Water filter chart: 'MODEL NUMBER | LT500P | LT600P | LT700P | LT800P | LT1000P'. Every model below carries a filled dot in that column."
+  },
+  {
+   "id": "fit_lg_lt800p_ca_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt800p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "LMXC23746",
+     "LMXS30756",
+     "LMXS30776",
+     "LMXS30786",
+     "LNXS23726",
+     "LNXS30866",
+     "LNXS30996",
+     "LPXS30866",
+     "LSC22991"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT20098040-20151238808711/",
+   "note": "Water filter chart: 'MODEL NUMBER | LT500P | LT600P | LT700P | LT800P | LT1000P'. Every model below carries a filled dot in that column."
+  },
+  {
+   "id": "fit_lg_lt700p_ca_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt700p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "LFD20786",
+     "LFD22786",
+     "LFDS22520",
+     "LFX21976",
+     "LFX25976",
+     "LFX25978",
+     "LFX25991",
+     "LFX25992",
+     "LFX28968",
+     "LFX28978",
+     "LFX31915",
+     "LFX31925",
+     "LFX31935",
+     "LFX31945",
+     "LFX31995",
+     "LFX33975",
+     "LFXC24726",
+     "LFXC24766",
+     "LFXS24623",
+     "LFXS24663",
+     "LFXS27566",
+     "LFXS29626",
+     "LFXS30726",
+     "LFXS30766",
+     "LFXS30786",
+     "LFXS32726",
+     "LFXS32766",
+     "LMX21986",
+     "LMX25986",
+     "LMX25988",
+     "LMX28988",
+     "LMX28994",
+     "LMX31985",
+     "LMXS27626",
+     "LMXS27676",
+     "LMXS27766",
+     "LSFD2491",
+     "LSFXC2476",
+     "LSSB2692",
+     "SRSXB2622",
+     "UPFXC3466"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT20098040-20151238808711/",
+   "note": "Water filter chart: 'MODEL NUMBER | LT500P | LT600P | LT700P | LT800P | LT1000P'. Every model below carries a filled dot in that column."
+  },
+  {
+   "id": "fit_lg_lt600p_ca_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt600p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "LFD21860",
+     "LFD21870",
+     "LFD22860",
+     "LFD23860",
+     "LFD25860",
+     "LFD25870",
+     "LFX21960",
+     "LFX21971",
+     "LFX21975",
+     "LFX21980",
+     "LFX23961",
+     "LFX23965",
+     "LFX25950",
+     "LFX25960",
+     "LFX25961",
+     "LFX25971",
+     "LFX25975",
+     "LFX25980",
+     "LFX28977",
+     "LMX21971",
+     "LMX21981",
+     "LMX21984",
+     "LMX25981",
+     "LMX25984",
+     "LMX25985",
+     "LMX28983",
+     "LMX28987",
+     "LRDC20731",
+     "LRFC21760",
+     "LRFC25760",
+     "LRFD21855",
+     "LRFD22850",
+     "LRFD25850",
+     "LRSC26910",
+     "LRSC26912",
+     "LRSC26915",
+     "LRSC26920",
+     "LRSC26922",
+     "LRSC26923",
+     "LRSC26925",
+     "LRSC26940",
+     "LRSC26941",
+     "LRSC26944",
+     "LRSC26950",
+     "LSC24971",
+     "LSC26945",
+     "LSC27918",
+     "LSC27926",
+     "LSC27931",
+     "LSC27935",
+     "LSC27937",
+     "LSC27950",
+     "LSC27970",
+     "LSC27990",
+     "LSC27991",
+     "LSFX213",
+     "LSMX214",
+     "LSSC243"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT20098040-20151238808711/",
+   "note": "Water filter chart: 'MODEL NUMBER | LT500P | LT600P | LT700P | LT800P | LT1000P'. Every model below carries a filled dot in that column."
+  },
+  {
+   "id": "fit_lg_lt500p_ca_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt500p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "LFX24626",
+     "LFX25974",
+     "LFXS24566",
+     "LSC23924"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/ca_en/support/product-support/troubleshoot/help-library/cs-CT20098040-20151238808711/",
+   "note": "Water filter chart: 'MODEL NUMBER | LT500P | LT600P | LT700P | LT800P | LT1000P'. Every model below carries a filled dot in that column."
+  },
+  {
+   "id": "fit_lg_lt1000p_mx_models",
+   "category": "fridge_water",
+   "part_id": "lg_lt1000p",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "GM22SGPK",
+     "GM28LIP",
+     "GM28XID",
+     "GM29BIP",
+     "GM84SXD",
+     "GM88SXM",
+     "GS65SDPK",
+     "GS73SXS",
+     "LB26BGS",
+     "LM22SGPK",
+     "LM56SPP",
+     "LM57SXT",
+     "LM65SCS",
+     "LM65SDS",
+     "LM65SGS",
+     "LM75BXT",
+     "LM75SGS",
+     "LM75SXT",
+     "LM80SGD",
+     "LM80SXS",
+     "LM85SXD",
+     "LM87SXD",
+     "LM89SXD",
+     "LS65SDP1",
+     "LS65SDT1",
+     "LS65SXP",
+     "LS74SDP",
+     "LS74SDT",
+     "LS74SGP",
+     "LS74SXP",
+     "VS22JDP",
+     "VS22JS",
+     "VS22XCT",
+     "VS27JP",
+     "VS27JS",
+     "VS27JT",
+     "VS27LIP",
+     "VS27XCS"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.lg.com/mx/accesorios-filtros-refrigeradores/agf80300704/buy/",
+   "note": "Productos Compatibles: GM22SGPK-GM28LIP-GM28XID-GM29BIP-GM84SXD-GM88SXM-GS65SDPK-GS73SXS-LB26BGS-LM22SGPK-LM56SPP-LM57SXT-LM65SCS-LM65SDS-LM65SGS-LM75BXT-LM75SGS-LM75SXT-LM80SGD-LM80SXS-LM85SXD-LM87SXD-LM89SXD-LS65SDP1-LS65SDT1-LS65SXP-LS74SDP-LS74SDT-LS74SGP-LS74SXP-VS22JDP-VS22JS-VS22XCT-VS27JP-VS27JS-VS27JT-VS27LIP-VS27XCS"
+  },
+  {
+   "id": "fit_coway_max2_230_240_models",
+   "category": "air_purifier",
+   "part_id": "coway_max2_230_240",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "AIRMEGA 230",
+     "AIRMEGA 240"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://cowaymega.com/products/airmega-230-240-max2-filter",
+   "note": "Please note: The filter contains one Max2 filter for your Airmega 230 or 240."
+  },
+  {
+   "id": "fit_coway_max2_250_models",
+   "category": "air_purifier",
+   "part_id": "coway_max2_250",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "AIRMEGA 250",
+     "AIRMEGA 250S",
+     "AIRMEGA 250ART"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://cowaymega.com/products/airmega-250-max2-filter",
+   "note": "Airmega 250•250S•250ART Max2 Filter"
+  },
+  {
+   "id": "fit_coway_max2_300_models",
+   "category": "air_purifier",
+   "part_id": "coway_max2_300",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "AIRMEGA 300",
+     "AIRMEGA 300S"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://cowaymega.com/products/airmega-300-max2-filter-set",
+   "note": "Airmega 300•300S Max2 Filter Set"
+  },
+  {
+   "id": "fit_coway_max2_400_models",
+   "category": "air_purifier",
+   "part_id": "coway_max2_400",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "AIRMEGA 400",
+     "AIRMEGA 400S"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://cowaymega.com/products/airmega-400-max2-filter-set",
+   "note": "Compatible with Airmega 400 and 400S"
+  },
+  {
+   "id": "fit_coway_max2_icon_models",
+   "category": "air_purifier",
+   "part_id": "coway_max2_icon",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "AIRMEGA ICON",
+     "AIRMEGA ICONS"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://cowaymega.com/products/airmega-icon-max2-filter",
+   "note": "Please note: The filter contains one Max2 filter of your Airmega Icon/IconS."
+  },
+  {
+   "id": "fit_levoit_core300p_pet_models",
+   "category": "air_purifier",
+   "part_id": "levoit_core300p_pet",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "CORE 300-P",
+     "CORE P350-P",
+     "CORE 300-P-RAC"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-pet-allergy",
+   "note": "Compatible with only: Core 300-P, Core P350-P, Core 300-P-RAC"
+  },
+  {
+   "id": "fit_levoit_core300p_toxin_models",
+   "category": "air_purifier",
+   "part_id": "levoit_core300p_toxin",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "CORE 300-P",
+     "CORE P350-P",
+     "CORE 300-P-RAC"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://levoit.com/products/core300-p-air-purifier-replacement-filter-toxin-absorber",
+   "note": "Compatible with only: Core 300-P, Core P350-P, Core 300-P-RAC"
+  },
+  {
+   "id": "fit_bosch_borplftr50_specsheet_models",
+   "category": "fridge_water",
+   "part_id": "bosch_borplftr50",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "B36CL80ENS",
+     "B36CL80SNS",
+     "B36CL81ENG"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://media3.bosch-home.com/Documents/specsheet/en-CA/B36CL81ENG.pdf",
+   "note": "en-CA 整机规格书：Optional accessories BORPLFTR50 : water ﬁlter（同款 BORPLFTR50 亦见于 B36CL80ENS / B36CL80SNS 规格书机型行）"
+  },
+  {
+   "id": "fit_bosch_borplftr55_specsheet_models",
+   "category": "fridge_water",
+   "part_id": "bosch_borplftr50",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "B30IB100SP",
+     "B36FD52SNB",
+     "B36FD52SNS"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://media3.bosch-home.com/Documents/specsheet/en-CA/B30IB100SP.pdf",
+   "note": "en-CA 整机规格书机型行直接标注滤芯编号：B30IB100SP BORPLFTR55 Ultraclarity PRO water filter（同款见 B36FD52SNB / B36FD52SNS 规格书）"
+  },
+  {
+   "id": "fit_blueair_bp511_models",
+   "category": "air_purifier",
+   "part_id": "blueair_bp511_pac",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "BLUE PURE 511"
+    ]
+   },
+   "grade": "rule",
+   "source_url": "https://www.blueair.com/products/replacement-filter-for-blue-pure-511",
+   "note": "商品页商品名：Blue Pure 511 Particle + Carbon Filter（机型取自商品名，非逐机型清单）"
+  },
+  {
+   "id": "fit_blueair_bp_mini_max_models",
+   "category": "air_purifier",
+   "part_id": "blueair_bp_mini_max_pac",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "BLUE PURE MINI MAX"
+    ]
+   },
+   "grade": "rule",
+   "source_url": "https://www.blueair.com/products/replacement-filter-for-blue-pure-mini-max",
+   "note": "商品页标题：Blue Pure Mini Max Replacement Filter | Official Blueair Filter"
+  },
+  {
+   "id": "fit_blueair_bp311_models",
+   "category": "air_purifier",
+   "part_id": "blueair_bp311_pac",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "BLUE PURE 311"
+    ]
+   },
+   "grade": "rule",
+   "source_url": "https://www.blueair.com/products/blue-pure-311-particle-carbon-filter",
+   "note": "商品页商品名：Blue Pure 311 Particle + Carbon Filter"
+  },
+  {
+   "id": "fit_blueair_bp211_smokeblock_models",
+   "category": "air_purifier",
+   "part_id": "blueair_bp211_smokeblock",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "BLUE PURE 211+"
+    ]
+   },
+   "grade": "rule",
+   "source_url": "https://www.blueair.com/products/blue-pure-211-series-smokeblock-filter",
+   "note": "商品页标题写 Series，故按系列前缀匹配 Blue Pure 211+"
+  },
+  {
+   "id": "fit_blueair_f4max_models",
+   "category": "air_purifier",
+   "part_id": "blueair_f4max_pac",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "BLUE PURE 411I MAX",
+     "BLUE PURE 411I+ MAX",
+     "BLUE PURE 411A MAX"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.blueair.com/products/f4max-replacement-pac-filter-for-411max-series-f4max",
+   "note": "Blue Pure 411i Max,411i+ Max, 411a Max Filter"
+  },
+  {
+   "id": "fit_blueair_f3max_models",
+   "category": "air_purifier",
+   "part_id": "blueair_f3max_pac",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "BLUE PURE 311I+ MAX"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.blueair.com/products/f3max-replacement-pac-filter-for-311i-max",
+   "note": "Blue Pure 311i+ Max Filter"
+  },
+  {
+   "id": "fit_blueair_f5max_models",
+   "category": "air_purifier",
+   "part_id": "blueair_f5max_allergenblock",
+   "selector": {
+    "type": "exact",
+    "values": [
+     "BLUE PURE 511I MAX"
+    ]
+   },
+   "grade": "explicit",
+   "source_url": "https://www.blueair.com/products/f5max-replacement-allergenblock-filter-for-511i-max",
+   "note": "F5MAX AllergenBlock Filter for 511i Max"
+  }
+ ],
+ "conflicts": [
+  {
+   "id": "c_levoit_core300_naming",
+   "part_id": "levoit_core300_rf",
+   "description": "Levoit's own pages describe Core 300 compatibility differently: product page A lists Core 300-P / Core P350-P / Core 300-P-RAC, while product page B (Toxin Absorber) lists Core 300 / Core P350 / Core 300-RAC. Neither page explains whether the -P suffix is a packaging variant.",
+   "handling": "Both wordings are shown side by side with the page each came from. We never merge them into a single claim.",
+   "status": "unresolved_page_b_404"
+  },
+  {
+   "id": "c_aprilaire_35_variants",
+   "part_id": "aprilaire_35",
+   "description": "The AprilAire site page lists 15 models; the official store page adds four variants (600MKZ, 600KZ, 700KZ, 700MKZ).",
+   "handling": "Union of both pages, with the source page recorded per row and kept in exports."
+  },
+  {
+   "id": "c_samsung_capacity_units",
+   "part_id": "samsung_haf_cin",
+   "description": "The Canadian page states 6 months / 1200 L; the US page states 300 gallons (1200 L is about 317 gal, so the two are not an exact equivalent).",
+   "handling": "Spec text keeps the manufacturer's original unit and wording instead of converting to a single number."
+  }
+ ]
 }
