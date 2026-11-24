@@ -23,6 +23,7 @@ import { colors, type, space } from './src/theme';
 import { match, lookup, brandFamilies, getPart, getEvidence, conflictFor, categories, adapters, sources, grades } from './src/fitment';
 import { computeDue, formatRemaining, statusLabel, todayStr } from './src/due';
 import { syncWidget } from './src/widget';
+import { syncSpotlight } from './src/spotlight';
 import * as db from './src/db';
 import * as notify from './src/notify';
 import * as fb from './src/feedback';
@@ -165,9 +166,12 @@ function HomeScreen({ navigation, refreshKey }) {
   );
   const dueSoon = rows.filter((r) => ['overdue', 'urgent', 'due'].includes(r.due.status)).length;
 
-  // 每次主屏数据变化都把"最该换的那台"推到小组件（非 iOS 环境静默跳过）
+  // 每次主屏数据变化都把"最该换的那台"推到小组件，并把全部电器刷新到系统聚焦索引
+  // （非 iOS 环境静默跳过）
   useEffect(() => {
-    if (ready) syncWidget(rows);
+    if (!ready) return;
+    syncWidget(rows);
+    syncSpotlight(rows);
   }, [rows, ready]);
 
   if (!ready) {

@@ -163,6 +163,10 @@ jobs:
           codesign -d --entitlements :- "$APP/PlugIns/PartFitWidget.appex" 2>/dev/null | grep -A3 'application-groups' || { echo "FAIL: widget missing app group entitlement"; exit 1; }
           codesign -dv "$APP/PlugIns/PartFitWidget.appex" 2>&1 | grep -Ei 'Identifier|TeamIdentifier' | head -4 || true
           echo "OK: widget bundled and signed with app group"
+          echo "== spotlight gate =="
+          strings "$APP/PartFit" | grep -F "PartFit spotlight index failed" || { echo "FAIL: spotlight bridge not compiled into app binary"; exit 1; }
+          grep -n "indexItems" ios/*/../modules/partfit-shared/ios/PartfitSharedModule.swift || true
+          echo "OK: Core Spotlight bridge compiled in"
 
       - name: Upload to App Store Connect
         if: ${{ inputs.upload }}
