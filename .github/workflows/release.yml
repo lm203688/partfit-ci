@@ -164,8 +164,8 @@ jobs:
           codesign -dv "$APP/PlugIns/PartFitWidget.appex" 2>&1 | grep -Ei 'Identifier|TeamIdentifier' | head -4 || true
           echo "OK: widget bundled and signed with app group"
           echo "== spotlight gate =="
-          strings "$APP/PartFit" | grep -F "PartFit spotlight index failed" || { echo "FAIL: spotlight bridge not compiled into app binary"; exit 1; }
-          grep -n "indexItems" ios/*/../modules/partfit-shared/ios/PartfitSharedModule.swift || true
+          grep -raq -F "PartFit spotlight index failed" "$APP" || { echo "FAIL: spotlight bridge not compiled into any shipped binary"; grep -raq -i "partfitshared" "$APP" | head -3; exit 1; }
+          grep -raq -i "PartfitSharedModule" "$APP" || { echo "FAIL: shared module missing from bundle"; exit 1; }
           echo "OK: Core Spotlight bridge compiled in"
 
       - name: Upload to App Store Connect
