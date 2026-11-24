@@ -9,7 +9,7 @@
   "ios": {
     "supportsTablet": false,
     "bundleIdentifier": "com.example.partfit",
-    "buildNumber": "11",
+    "buildNumber": "12",
     "appleTeamId": "",
     "infoPlist": {
       "NSCameraUsageDescription": "Take a photo of an appliance model plate or the label on your old filter. Photos are processed on this device and never uploaded.",
