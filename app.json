@@ -14,7 +14,8 @@
     "infoPlist": {
       "NSCameraUsageDescription": "Take a photo of an appliance model plate or the label on your old filter. Photos are processed on this device and never uploaded.",
       "ITSAppUsesNonExemptEncryption": false
-    }
+    },
+    "icon": "./assets/icon.png"
   },
   "android": {
     "package": "com.example.partfit"
@@ -30,5 +31,6 @@
         "cameraPermission": "Take a photo of an appliance model plate or the label on your old filter. Photos are processed on this device and never uploaded."
       }
     ]
-  ]
+  ],
+  "icon": "./assets/icon.png"
 }
