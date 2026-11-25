@@ -1,4 +1,4 @@
-name: release
+﻿name: release
 
 on:
   workflow_dispatch:
@@ -159,6 +159,12 @@ jobs:
           sed -n '/UIApplicationSceneManifest/,+12p' "$RUNNER_TEMP/plist.txt"
           grep -n "class SceneDelegate" ios/*/AppDelegate.swift || { echo "FAIL: SceneDelegate missing"; exit 1; }
           echo "OK: signed ipa adopts UIScene lifecycle"
+          echo "== app intents gate =="
+          test -d "$APP/Metadata.appintents" || { echo "FAIL: App Intents metadata missing from signed ipa"; exit 1; }
+          grep -raq "PartFitShortcuts" "$APP/Metadata.appintents" || { echo "FAIL: PartFitShortcuts not registered in intent metadata"; exit 1; }
+          echo "OK: App Intents shortcuts registered"
+          test -f "$APP/fitment-index.json" || { echo "FAIL: fitment-index.json not bundled"; exit 1; }
+          echo "OK: fitment index bundled"
           echo "== widget gate =="
           test -d "$APP/PlugIns/PartFitWidget.appex" || { echo "FAIL: widget appex missing"; exit 1; }
           plutil -p "$APP/PlugIns/PartFitWidget.appex/Info.plist" | grep -Ei 'CFBundleIdentifier|CFBundleVersion|NSExtensionPointIdentifier' || true
