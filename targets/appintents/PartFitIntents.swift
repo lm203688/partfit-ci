@@ -86,16 +86,12 @@ private struct PFIndex {
   }
 }
 
-struct FilterPartEntity: AppEntity, IndexedEntity {
+struct FilterPartEntity: AppEntity {
   static var typeDisplayRepresentation: TypeDisplayRepresentation = TypeDisplayRepresentation(name: "Filter")
   static var defaultQuery = FilterPartQuery()
 
   let id: String
-
-  // Spotlight indexes the human-readable title, so typing "everydrop 3" in system
-  // search surfaces the part itself instead of only the app.
-  @Property(indexingKey: \.displayName)
-  var summary: String
+  let summary: String
 
   var displayRepresentation: DisplayRepresentation {
     DisplayRepresentation(title: "\(id)", subtitle: "\(summary)")
@@ -239,3 +235,9 @@ struct PartFitShortcuts: AppShortcutsProvider {
     )
   }
 }
+
+// Spotlight indexes the part entity from iOS 18 on: system search then offers the
+// filter by its display name and jumps straight into the intent, instead of only
+// surfacing the app icon.
+@available(iOS 18.0, *)
+extension FilterPartEntity: IndexedEntity {}
