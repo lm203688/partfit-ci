@@ -5,6 +5,14 @@ type PartfitSharedModule = {
   clearWidgetData: () => boolean;
   indexItems: (json: string) => boolean;
   clearIndex: () => boolean;
+  liveActivityEnabled: () => boolean;
+  startFilterActivity: (
+    part: string,
+    headline: string,
+    detail: string,
+    days: number
+  ) => Promise<boolean>;
+  endFilterActivity: () => Promise<boolean>;
 };
 
 let mod: PartfitSharedModule | null = null;
@@ -45,6 +53,36 @@ export function indexSearchableItems(
 export function clearSearchableItems(): boolean {
   try {
     return mod ? mod.clearIndex() : false;
+  } catch (e) {
+    return false;
+  }
+}
+
+export function liveActivityEnabled(): boolean {
+  try {
+    return mod ? !!mod.liveActivityEnabled() : false;
+  } catch (e) {
+    return false;
+  }
+}
+
+/** 临期滤芯的锁屏倒计时，失败静默。 */
+export async function startFilterActivity(
+  part: string,
+  headline: string,
+  detail: string,
+  days: number
+): Promise<boolean> {
+  try {
+    return mod ? await mod.startFilterActivity(part, headline, detail, days) : false;
+  } catch (e) {
+    return false;
+  }
+}
+
+export async function endFilterActivity(): Promise<boolean> {
+  try {
+    return mod ? await mod.endFilterActivity() : false;
   } catch (e) {
     return false;
   }
