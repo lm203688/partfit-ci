@@ -1,5 +1,6 @@
 import SwiftUI
 import WidgetKit
+import AppIntents
 
 // App Group 约定为 "group." + 主 App bundle id；本扩展的 bundle id 带 ".widget" 后缀，去掉后同源。
 private var appGroup: String {
@@ -117,8 +118,32 @@ struct FilterView: View {
   }
 }
 
-@main
-struct PartFitWidget: Widget {
+// 控制中心按钮要拉起主 App，动作由声明 openAppWhenRun 的 AppIntent 承担。
+@available(iOS 18.0, *)
+struct OpenPartFitControlIntent: AppIntent {
+  static var title: LocalizedStringResource = "Open PartFit"
+  static var description = IntentDescription("Opens the filter lookup from Control Centre.")
+  static var openAppWhenRun: Bool = true
+
+  func perform() async throws -> some IntentResult {
+    .result()
+  }
+}
+
+@available(iOS 18.0, *)
+struct NextFilterControl: ControlWidget {
+  var body: some ControlWidgetConfiguration {
+    StaticControlConfiguration(kind: "NextFilterControl") {
+      ControlWidgetButton(action: OpenPartFitControlIntent()) {
+        Label("Next filter", systemImage: "line.3.horizontal.decrease.circle")
+      }
+    }
+    .displayName("Next filter")
+    .description("Opens PartFit at the next filter.")
+  }
+}
+
+struct PartFitDueWidget: Widget {
   let kind = "PartFitNextFilter"
 
   var body: some WidgetConfiguration {
@@ -128,5 +153,16 @@ struct PartFitWidget: Widget {
     .configurationDisplayName("Next filter")
     .description("Shows the appliance that needs a new filter next and the exact replacement part number.")
     .supportedFamilies([.systemSmall])
+  }
+}
+
+@main
+struct PartFitWidgetBundle: WidgetBundle {
+  @WidgetBundleBuilder
+  var body: some Widget {
+    PartFitDueWidget()
+    if #available(iOS 18.0, *) {
+      NextFilterControl()
+    }
   }
 }
