@@ -3,7 +3,7 @@ import SwiftUI
 import WidgetKit
 
 // 锁屏与灵动岛共用的实时活动：下一个滤芯的倒计时。
-@available(iOS 16.1, *)
+@available(iOS 16.2, *)
 struct FilterLiveActivityWidget: Widget {
   var body: some WidgetConfiguration {
     ActivityConfiguration(for: FilterActivityAttributes.self) { context in
