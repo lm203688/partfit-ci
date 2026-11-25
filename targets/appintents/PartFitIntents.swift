@@ -94,7 +94,7 @@ struct FilterPartEntity: AppEntity, IndexedEntity {
 
   // Spotlight indexes the human-readable title, so typing "everydrop 3" in system
   // search surfaces the part itself instead of only the app.
-  @Property(indexingKey: \.summary)
+  @Property(indexingKey: \.displayName)
   var summary: String
 
   var displayRepresentation: DisplayRepresentation {
