@@ -86,12 +86,16 @@ private struct PFIndex {
   }
 }
 
-struct FilterPartEntity: AppEntity {
+struct FilterPartEntity: AppEntity, IndexedEntity {
   static var typeDisplayRepresentation: TypeDisplayRepresentation = TypeDisplayRepresentation(name: "Filter")
   static var defaultQuery = FilterPartQuery()
 
   let id: String
-  let summary: String
+
+  // Spotlight indexes the human-readable title, so typing "everydrop 3" in system
+  // search surfaces the part itself instead of only the app.
+  @Property(indexingKey: \.summary)
+  var summary: String
 
   var displayRepresentation: DisplayRepresentation {
     DisplayRepresentation(title: "\(id)", subtitle: "\(summary)")
