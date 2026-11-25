@@ -1,3 +1,4 @@
+import ActivityKit
 import ExpoModulesCore
 import WidgetKit
 import CoreSpotlight
@@ -36,6 +37,42 @@ public class PartfitSharedModule: Module {
       d?.synchronize()
       if #available(iOS 14.0, *) {
         WidgetCenter.shared.reloadAllTimelines()
+      }
+      return true
+    }
+
+
+    // 实时活动：临期（含逾期）才占用锁屏，由 JS 侧判断后调用。
+    Function("liveActivityEnabled") { () -> Bool in
+      if #available(iOS 16.1, *) {
+        return ActivityAuthorizationInfo().areActivitiesEnabled
+      }
+      return false
+    }
+
+    AsyncFunction("startFilterActivity") { (part: String, headline: String, detail: String, days: Int) -> Bool in
+      guard #available(iOS 16.1, *) else { return false }
+      guard ActivityAuthorizationInfo().areActivitiesEnabled else { return false }
+      for activity in Activity<FilterActivityAttributes>.activities {
+        await activity.end(nil, dismissalPolicy: .immediate)
+      }
+      let attributes = FilterActivityAttributes(part: part)
+      let state = FilterActivityAttributes.ContentState(headline: headline, detail: detail, days: days)
+      do {
+        _ = try Activity.request(
+          attributes: attributes,
+          content: ActivityContent(state: state, staleDate: nil)
+        )
+        return true
+      } catch {
+        return false
+      }
+    }
+
+    AsyncFunction("endFilterActivity") { () -> Bool in
+      guard #available(iOS 16.1, *) else { return false }
+      for activity in Activity<FilterActivityAttributes>.activities {
+        await activity.end(nil, dismissalPolicy: .immediate)
       }
       return true
     }
