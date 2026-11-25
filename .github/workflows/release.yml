@@ -105,7 +105,10 @@ jobs:
             -archivePath "$RUNNER_TEMP/partfit.xcarchive" \
             DEVELOPMENT_TEAM="$TEAM_ID" \
             OTHER_CODE_SIGN_FLAGS="--keychain build.keychain" \
-            2>&1 | tail -80
+            2>&1 | tee /tmp/archive.log | tail -60
+          rc=${PIPESTATUS[0]}
+          grep -E "error:" /tmp/archive.log | sort -u | head -40 || true
+          exit $rc
 
       - name: Export ipa
         env:
