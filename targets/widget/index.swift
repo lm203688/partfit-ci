@@ -164,7 +164,7 @@ struct PartFitWidgetBundle: WidgetBundle {
     if #available(iOS 18.0, *) {
       NextFilterControl()
     }
-    if #available(iOS 16.1, *) {
+    if #available(iOS 16.2, *) {
       FilterLiveActivityWidget()
     }
   }
